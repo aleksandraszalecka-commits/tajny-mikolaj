@@ -16,7 +16,6 @@
         radial-gradient(circle at 80% 100%, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
     }
 
-    /* Płatki śniegu */
     .snowflake {
       position: fixed;
       top: -10px;
@@ -30,7 +29,6 @@
       to { transform: translateY(105vh) rotate(360deg); }
     }
 
-    /* Prezent SVG 3D Animacja */
     .gift-wrapper {
       perspective: 1000px;
       cursor: pointer;
@@ -54,7 +52,6 @@
       transform: translateY(-75px) rotate(-38deg) translateX(-18px);
     }
 
-    /* Efekt błysku z wnętrza */
     .glow-effect {
       opacity: 0;
       transition: opacity 0.5s ease 0.2s;
@@ -68,7 +65,7 @@
 
   <div id="snowContainer"></div>
 
-  <main class="w-full max-w-md bg-slate-900/80 backdrop-blur-2xl rounded-3xl p-6 border border-slate-800 shadow-2xl z-10 my-auto relative overflow-hidden">
+  <main class="w-full max-w-md bg-slate-900/90 backdrop-blur-2xl rounded-3xl p-6 border border-slate-800 shadow-2xl z-10 my-auto relative overflow-hidden">
     
     <!-- EKRAN 1: KONFIGURACJA -->
     <div id="setupView">
@@ -81,13 +78,11 @@
       </div>
 
       <div class="space-y-4">
-        <!-- Budżet -->
         <div>
           <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Sugerowany budżet</label>
           <input type="text" id="budgetInput" value="200 zł" placeholder="np. 200 zł" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-amber-400 font-bold placeholder:font-normal placeholder:text-slate-600 focus:outline-none focus:border-amber-400 transition-all text-sm">
         </div>
 
-        <!-- Uczestnicy -->
         <div>
           <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Dodaj uczestnika</label>
           <div class="flex gap-2">
@@ -98,7 +93,6 @@
           </div>
         </div>
 
-        <!-- Lista -->
         <div>
           <div class="flex justify-between items-center mb-2">
             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Lista osób</span>
@@ -114,7 +108,7 @@
       </div>
     </div>
 
-    <!-- EKRAN 2: LISTA UŻYTKOWNIKÓW DO PODANIA TELEFONU -->
+    <!-- EKRAN 2: LISTA OSOB -->
     <div id="drawView" class="hidden">
       <div class="text-center mb-6">
         <span class="text-3xl">??</span>
@@ -129,22 +123,22 @@
       </button>
     </div>
 
-    <!-- EKRAN 3: KOD PIN / POTWIERDZENIE -->
+    <!-- EKRAN 3: KOD PIN / WPISYWANIE -->
     <div id="confirmView" class="hidden text-center py-4">
       <div class="inline-flex p-3 rounded-full bg-amber-500/10 border border-amber-500/20 mb-3">
         <span class="text-3xl">??</span>
       </div>
-      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Weryfikacja</h3>
+      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Weryfikacja tożsamości</h3>
       <p id="confirmName" class="text-2xl font-extrabold text-white my-1"></p>
       
       <div id="pinSection" class="my-4">
-        <p id="pinInstruction" class="text-xs text-slate-400 mb-3">Ustal swój 4-cyfrowy PIN, aby tylko Ty móc podglądnąć wynik później:</p>
-        <input type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric" id="pinInput" placeholder="****" class="w-32 text-center text-2xl tracking-[0.5em] font-bold bg-slate-950 border border-slate-700 rounded-xl py-2 text-amber-400 focus:outline-none focus:border-amber-400">
+        <p id="pinInstruction" class="text-xs text-slate-400 mb-3"></p>
+        <input type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric" id="pinInput" placeholder="****" class="w-36 text-center text-3xl tracking-[0.4em] font-bold bg-slate-950 border border-slate-700 rounded-xl py-2.5 text-amber-400 focus:outline-none focus:border-amber-400">
       </div>
       
       <div class="space-y-2 mt-4">
         <button onclick="handlePinSubmit()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 text-sm shadow-lg shadow-emerald-950/40">
-          Zatwierdź i Otwórz Prezent ??
+          Zatwierdź PIN ??
         </button>
         <button onclick="showDrawView()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-2.5 rounded-xl text-xs">
           Anuluj
@@ -152,7 +146,7 @@
       </div>
     </div>
 
-    <!-- EKRAN 4: PREZENT SVG 3D -->
+    <!-- EKRAN 4: PREZENT SVG -->
     <div id="giftView" class="hidden text-center py-4">
       <h3 class="text-lg font-bold text-white mb-1">Dotknij prezent!</h3>
       <p class="text-xs text-slate-400 mb-6">Stuknij w pudełko, aby poznać wylosowaną osobę</p>
@@ -169,20 +163,13 @@
             </filter>
           </defs>
 
-          <!-- Poświata wewnątrz -->
           <circle class="glow-effect" cx="100" cy="110" r="50" fill="#fbbf24" filter="url(#glow)" />
-
-          <!-- Pudełko spód -->
           <rect x="45" y="85" width="110" height="90" rx="8" fill="#b91c1c" />
-          
-          <!-- Pionowa wstążka -->
           <rect x="88" y="85" width="24" height="90" fill="#fbbf24" />
 
-          <!-- Pokrywka -->
           <g class="lid-group">
             <rect x="38" y="60" width="124" height="30" rx="6" fill="#dc2626" />
             <rect x="88" y="60" width="24" height="30" fill="#fbbf24" />
-            <!-- Kokarda -->
             <path d="M 80 60 C 60 35, 90 25, 98 60 Z" fill="#f59e0b" />
             <path d="M 120 60 C 140 35, 110 25, 102 60 Z" fill="#f59e0b" />
             <circle cx="100" cy="58" r="7" fill="#fbbf24" />
@@ -202,7 +189,7 @@
       </div>
       
       <p class="text-xs text-slate-400 mb-5 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
-        ?? Kod PIN został zapisany. Zapamiętaj go, jeśli zechcesz sprawdzić wynik ponownie na tym telefonie.
+        ?? Zapamiętaj swój PIN! Pozwoli Ci on ponownie sprawdzić ten wynik na tym telefonie.
       </p>
 
       <button onclick="hideResult()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-red-950/50 transition-all active:scale-95 text-sm">
@@ -213,7 +200,7 @@
   </main>
 
   <script>
-    // Generowanie płatków śniegu w tle
+    // Śnieg
     const snowContainer = document.getElementById('snowContainer');
     for (let i = 0; i < 20; i++) {
       const flake = document.createElement('div');
@@ -226,7 +213,7 @@
       snowContainer.appendChild(flake);
     }
 
-    // Świąteczny dźwięk dzwonków (Web Audio API)
+    // Dźwięk
     function playJingle() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -260,7 +247,7 @@
     });
 
     window.onload = () => {
-      const savedState = localStorage.getItem('santa_state_v3');
+      const savedState = localStorage.getItem('santa_state_v4');
       if (savedState) {
         state = JSON.parse(savedState);
         showDrawView();
@@ -268,7 +255,7 @@
     };
 
     function saveState() {
-      localStorage.setItem('santa_state_v3', JSON.stringify(state));
+      localStorage.setItem('santa_state_v4', JSON.stringify(state));
     }
 
     function addParticipant() {
@@ -322,7 +309,6 @@
       let receivers = [...names];
       let valid = false;
 
-      // Algorytm deranżacji (nikt nie losuje siebie)
       while (!valid) {
         for (let i = receivers.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -362,16 +348,16 @@
         const btn = document.createElement('button');
         btn.className = `w-full p-4 rounded-xl font-semibold text-left flex justify-between items-center transition-all ${
           isDrawn 
-            ? 'bg-slate-950/40 text-slate-500 border border-slate-900' 
-            : 'bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 text-white active:scale-98 shadow-sm'
+            ? 'bg-slate-950/60 text-slate-300 border border-slate-800' 
+            : 'bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-white active:scale-98 shadow-sm'
         }`;
         
         btn.innerHTML = `
           <span class="text-sm font-bold">${name}</span>
-          <span class="text-xs px-2.5 py-1 rounded-md font-semibold ${
-            isDrawn ? 'bg-slate-900 text-slate-500' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+          <span class="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 ${
+            isDrawn ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
           }">
-            ${isDrawn ? '?? Zobacz ponownie' : 'Otwórz ??'}
+            ${isDrawn ? '?? Przypomnij (PIN)' : 'Otwórz ??'}
           </span>
         `;
 
@@ -390,11 +376,13 @@
 
       const isDrawn = state.drawn.includes(name);
       document.getElementById('pinInstruction').textContent = isDrawn 
-        ? "Wpisz swój 4-cyfrowy PIN, aby zobaczyć wynik:" 
-        : "Ustal swój 4-cyfrowy PIN (zapamiętaj go!):";
+        ? "Wpisz swój 4-cyfrowy PIN, aby przypomnieć wynik:" 
+        : "Ustal 4-cyfrowy PIN, aby zabezpieczyć swój wybór:";
 
       document.getElementById('drawView').classList.add('hidden');
       document.getElementById('confirmView').classList.remove('hidden');
+      
+      setTimeout(() => pinInput.focus(), 100);
     }
 
     function handlePinSubmit() {
@@ -473,7 +461,7 @@
 
     function resetAll() {
       if (confirm('Czy na pewno chcesz usunąć całe losowanie i zacząć od nowa?')) {
-        localStorage.removeItem('santa_state_v3');
+        localStorage.removeItem('santa_state_v4');
         state = { budget: '', names: [], pairs: {}, pins: {}, drawn: [] };
         setupParticipants = [];
         renderSetupList();
