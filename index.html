@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tajny Mikołaj ??</title>
+  <title>Tajny Mikołaj 🎄</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -61,23 +61,29 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 text-slate-100">
+<body class="min-h-screen flex flex-col justify-between p-4 text-slate-100 max-w-md mx-auto">
 
   <div id="snowContainer"></div>
 
-  <main class="w-full max-w-md bg-slate-900/90 backdrop-blur-2xl rounded-3xl p-6 border border-slate-800 shadow-2xl z-10 my-auto relative overflow-hidden">
+  <!-- APLIKACJA MAIN CONTAINER -->
+  <main class="w-full bg-slate-900/90 backdrop-blur-2xl rounded-3xl p-6 border border-slate-800 shadow-2xl z-10 my-auto relative overflow-hidden">
     
-    <!-- EKRAN 1: KONFIGURACJA -->
+    <!-- EKRAN 1: SETUP -->
     <div id="setupView">
       <div class="text-center mb-6">
         <div class="inline-flex p-3 rounded-2xl bg-red-500/10 border border-red-500/20 mb-3">
-          <span class="text-4xl">??</span>
+          <span class="text-4xl">🎅</span>
         </div>
-        <h1 class="text-2xl font-extrabold text-white tracking-tight">Tajny Mikołaj</h1>
-        <p class="text-slate-400 text-xs mt-1">Dodaj uczestników i rozpocznij losowanie</p>
+        <h1 class="text-2xl font-extrabold text-white tracking-tight">Nowe Losowanie</h1>
+        <p class="text-slate-400 text-xs mt-1">Utwórz nową listę uczestników</p>
       </div>
 
       <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Nazwa losowania</label>
+          <input type="text" id="drawTitleInput" placeholder="np. Wigilia 2026" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-all text-sm">
+        </div>
+
         <div>
           <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Sugerowany budżet</label>
           <input type="text" id="budgetInput" value="200 zł" placeholder="np. 200 zł" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-amber-400 font-bold placeholder:font-normal placeholder:text-slate-600 focus:outline-none focus:border-amber-400 transition-all text-sm">
@@ -95,40 +101,58 @@
 
         <div>
           <div class="flex justify-between items-center mb-2">
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Lista osób</span>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Uczestnicy</span>
             <span id="participantCount" class="text-xs font-bold px-2.5 py-0.5 bg-slate-800 rounded-full text-slate-300">0 osób</span>
           </div>
           
-          <div id="participantsList" class="space-y-2 max-h-[180px] overflow-y-auto pr-1 min-h-[90px] bg-slate-950/60 p-2.5 rounded-2xl border border-slate-800/80"></div>
+          <div id="participantsList" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 min-h-[80px] bg-slate-950/60 p-2.5 rounded-2xl border border-slate-800/80"></div>
         </div>
 
         <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-600 to-emerald-600 hover:from-red-500 hover:to-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-950/50 transition-all active:scale-95 text-sm flex items-center justify-center gap-2 mt-2">
-          <span>??</span> Rozpocznij losowanie
+          <span>🎲</span> Rozpocznij losowanie
         </button>
       </div>
     </div>
 
-    <!-- EKRAN 2: LISTA OSOB -->
+    <!-- EKRAN 2: LISTA OSOB (LOSOWANIE) -->
     <div id="drawView" class="hidden">
-      <div class="text-center mb-6">
-        <span class="text-3xl">??</span>
-        <h2 class="text-xl font-bold text-white mt-1">Przekaż telefon</h2>
-        <p id="progressStatus" class="text-slate-400 text-xs mt-1">Kliknij swoje imię z listy</p>
+      <div class="text-center mb-5">
+        <span class="text-3xl">🎁</span>
+        <h2 id="currentDrawTitle" class="text-xl font-bold text-white mt-1">Losowanie</h2>
+        <p id="progressStatus" class="text-slate-400 text-xs mt-1">Przekaż telefon odpowiedniej osobie</p>
       </div>
 
-      <div id="buttonsList" class="space-y-2.5 max-h-[50vh] overflow-y-auto pr-1"></div>
+      <div id="buttonsList" class="space-y-2.5 max-h-[45vh] overflow-y-auto pr-1"></div>
 
-      <button onclick="resetAll()" class="w-full mt-6 text-xs text-slate-500 hover:text-red-400 underline transition-colors">
-        Zresetuj całe losowanie
-      </button>
+      <div class="mt-6 pt-4 border-t border-slate-800/80 flex justify-between items-center">
+        <button onclick="archiveCurrentDraw()" class="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold">
+          📁 Zapisz w Historii
+        </button>
+        <button onclick="confirmReset()" class="text-xs text-slate-500 hover:text-red-400 underline">
+          Zakończ to losowanie
+        </button>
+      </div>
     </div>
 
-    <!-- EKRAN 3: KOD PIN / WPISYWANIE -->
+    <!-- EKRAN 3: HISTORIA LOSOWAŃ -->
+    <div id="historyView" class="hidden">
+      <div class="text-center mb-6">
+        <div class="inline-flex p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 mb-3">
+          <span class="text-3xl">📁</span>
+        </div>
+        <h2 class="text-xl font-bold text-white tracking-tight">Historia Losowań</h2>
+        <p class="text-slate-400 text-xs mt-1">Wszystkie zapisane losowania</p>
+      </div>
+
+      <div id="historyList" class="space-y-3 max-h-[55vh] overflow-y-auto pr-1"></div>
+    </div>
+
+    <!-- EKRAN 4: PIN / VERIFY -->
     <div id="confirmView" class="hidden text-center py-4">
       <div class="inline-flex p-3 rounded-full bg-amber-500/10 border border-amber-500/20 mb-3">
-        <span class="text-3xl">??</span>
+        <span class="text-3xl">🔒</span>
       </div>
-      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Weryfikacja tożsamości</h3>
+      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Weryfikacja PIN</h3>
       <p id="confirmName" class="text-2xl font-extrabold text-white my-1"></p>
       
       <div id="pinSection" class="my-4">
@@ -138,7 +162,7 @@
       
       <div class="space-y-2 mt-4">
         <button onclick="handlePinSubmit()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 text-sm shadow-lg shadow-emerald-950/40">
-          Zatwierdź PIN ??
+          Zatwierdź PIN 🔑
         </button>
         <button onclick="showDrawView()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-2.5 rounded-xl text-xs">
           Anuluj
@@ -146,7 +170,7 @@
       </div>
     </div>
 
-    <!-- EKRAN 4: PREZENT SVG -->
+    <!-- EKRAN 5: PREZENT SVG -->
     <div id="giftView" class="hidden text-center py-4">
       <h3 class="text-lg font-bold text-white mb-1">Dotknij prezent!</h3>
       <p class="text-xs text-slate-400 mb-6">Stuknij w pudełko, aby poznać wylosowaną osobę</p>
@@ -178,9 +202,9 @@
       </div>
     </div>
 
-    <!-- EKRAN 5: WYNIK -->
+    <!-- EKRAN 6: WYNIK -->
     <div id="resultView" class="hidden text-center py-2">
-      <span class="text-4xl">??</span>
+      <span class="text-4xl">🎉</span>
       <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-2">Kupujesz prezent dla:</p>
       
       <div class="my-4 p-5 rounded-2xl bg-slate-950 border border-amber-500/30 shadow-inner">
@@ -189,15 +213,25 @@
       </div>
       
       <p class="text-xs text-slate-400 mb-5 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
-        ?? Zapamiętaj swój PIN! Pozwoli Ci on ponownie sprawdzić ten wynik na tym telefonie.
+        🔒 Zapamiętaj swój PIN! Wynik możesz w każdej chwili sprawdzić ponownie w Historii.
       </p>
 
       <button onclick="hideResult()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-red-950/50 transition-all active:scale-95 text-sm">
-        ?? Zamknij i podaj telefon dalej
+        🔒 Zamknij i podaj telefon dalej
       </button>
     </div>
 
   </main>
+
+  <!-- PASKIEM NAWIGACJI NA DOLE (NAVBAR MENU) -->
+  <nav class="w-full max-w-md mt-4 bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-800 p-1.5 flex gap-2 z-20">
+    <button id="navDrawBtn" onclick="switchToTab('draw')" class="flex-1 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-red-600 text-white shadow-md">
+      <span>🎲</span> Losowanie
+    </button>
+    <button id="navHistoryBtn" onclick="switchToTab('history')" class="flex-1 py-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white">
+      <span>📁</span> Historia
+    </button>
+  </nav>
 
   <script>
     // Śnieg
@@ -205,7 +239,7 @@
     for (let i = 0; i < 20; i++) {
       const flake = document.createElement('div');
       flake.className = 'snowflake';
-      flake.innerHTML = '?';
+      flake.innerHTML = '❄';
       flake.style.left = Math.random() * 100 + 'vw';
       flake.style.animationDuration = (Math.random() * 4 + 6) + 's';
       flake.style.opacity = Math.random() * 0.5 + 0.2;
@@ -213,7 +247,7 @@
       snowContainer.appendChild(flake);
     }
 
-    // Dźwięk
+    // Audio
     function playJingle() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -235,27 +269,46 @@
 
     let setupParticipants = [];
     let state = {
+      id: null,
+      title: '',
       budget: '',
       names: [],
       pairs: {},
       pins: {},
       drawn: []
     };
+    let history = [];
 
     document.getElementById('nameInput').addEventListener('keypress', (e) => {
       if (e.key === 'Enter') addParticipant();
     });
 
     window.onload = () => {
-      const savedState = localStorage.getItem('santa_state_v4');
+      const savedState = localStorage.getItem('santa_current_v5');
+      const savedHistory = localStorage.getItem('santa_history_v5');
+
+      if (savedHistory) history = JSON.parse(savedHistory);
       if (savedState) {
         state = JSON.parse(savedState);
         showDrawView();
+      } else {
+        showSetupView();
       }
     };
 
     function saveState() {
-      localStorage.setItem('santa_state_v4', JSON.stringify(state));
+      localStorage.setItem('santa_current_v5', JSON.stringify(state));
+      
+      // Aktualizuj losowanie w historii, jeśli istnieje
+      if (state.id) {
+        const idx = history.findIndex(h => h.id === state.id);
+        if (idx !== -1) {
+          history[idx] = { ...state };
+        } else {
+          history.unshift({ ...state });
+        }
+        localStorage.setItem('santa_history_v5', JSON.stringify(history));
+      }
     }
 
     function addParticipant() {
@@ -283,16 +336,16 @@
       list.innerHTML = '';
 
       if (setupParticipants.length === 0) {
-        list.innerHTML = `<div class="text-center py-6 text-xs text-slate-600">Brak osób na liście. Wpisz imię powyżej.</div>`;
+        list.innerHTML = `<div class="text-center py-5 text-xs text-slate-600">Brak osób na liście. Wpisz imię powyżej.</div>`;
         return;
       }
 
       setupParticipants.forEach((name, i) => {
         const item = document.createElement('div');
-        item.className = 'flex justify-between items-center bg-slate-900 border border-slate-800/80 px-3.5 py-2.5 rounded-xl text-sm font-medium';
+        item.className = 'flex justify-between items-center bg-slate-900 border border-slate-800/80 px-3.5 py-2 rounded-xl text-sm font-medium';
         item.innerHTML = `
           <span class="text-slate-200">${name}</span>
-          <button onclick="removeParticipant(${i})" class="text-slate-500 hover:text-red-400 p-1 transition-colors text-xs">?</button>
+          <button onclick="removeParticipant(${i})" class="text-slate-500 hover:text-red-400 p-1 transition-colors text-xs">✕</button>
         `;
         list.appendChild(item);
       });
@@ -317,6 +370,9 @@
         valid = names.every((giver, index) => giver !== receivers[index]);
       }
 
+      const titleInput = document.getElementById('drawTitleInput').value.trim();
+      state.id = Date.now();
+      state.title = titleInput || `Losowanie ${new Date().toLocaleDateString()}`;
       state.budget = document.getElementById('budgetInput').value.trim();
       state.names = names;
       state.pairs = {};
@@ -331,17 +387,29 @@
       showDrawView();
     }
 
-    function showDrawView() {
+    function hideAllViews() {
       document.getElementById('setupView').classList.add('hidden');
+      document.getElementById('drawView').classList.add('hidden');
+      document.getElementById('historyView').classList.add('hidden');
       document.getElementById('confirmView').classList.add('hidden');
       document.getElementById('giftView').classList.add('hidden');
       document.getElementById('resultView').classList.add('hidden');
+    }
+
+    function showSetupView() {
+      hideAllViews();
+      document.getElementById('setupView').classList.remove('hidden');
+    }
+
+    function showDrawView() {
+      hideAllViews();
       document.getElementById('drawView').classList.remove('hidden');
+
+      document.getElementById('currentDrawTitle').textContent = state.title;
+      document.getElementById('progressStatus').textContent = `Wylosowano ${state.drawn.length} z ${state.names.length} osób`;
 
       const listContainer = document.getElementById('buttonsList');
       listContainer.innerHTML = '';
-
-      document.getElementById('progressStatus').textContent = `Wylosowano ${state.drawn.length} z ${state.names.length} osób`;
 
       state.names.forEach(name => {
         const isDrawn = state.drawn.includes(name);
@@ -357,13 +425,69 @@
           <span class="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 ${
             isDrawn ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
           }">
-            ${isDrawn ? '?? Przypomnij (PIN)' : 'Otwórz ??'}
+            ${isDrawn ? '🔒 Przypomnij (PIN)' : 'Otwórz 🎁'}
           </span>
         `;
 
         btn.onclick = () => askConfirmation(name);
         listContainer.appendChild(btn);
       });
+    }
+
+    function showHistoryView() {
+      hideAllViews();
+      document.getElementById('historyView').classList.remove('hidden');
+
+      const container = document.getElementById('historyList');
+      container.innerHTML = '';
+
+      if (history.length === 0) {
+        container.innerHTML = `<div class="text-center py-10 text-xs text-slate-600">Brak zapisanych losowań w historii.</div>`;
+        return;
+      }
+
+      history.forEach((h) => {
+        const card = document.createElement('div');
+        card.className = 'bg-slate-950/80 border border-slate-800 p-4 rounded-2xl flex justify-between items-center';
+        card.innerHTML = `
+          <div>
+            <h4 class="font-bold text-sm text-white">${h.title}</h4>
+            <p class="text-xs text-slate-400 mt-0.5">${h.names.length} osób | Budżet: ${h.budget || 'Brak'}</p>
+          </div>
+          <button onclick="loadFromHistory(${h.id})" class="bg-slate-800 hover:bg-slate-700 text-amber-300 px-3 py-2 rounded-xl text-xs font-semibold border border-slate-700">
+            Otwórz 📂
+          </button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function loadFromHistory(id) {
+      const found = history.find(h => h.id === id);
+      if (found) {
+        state = { ...found };
+        localStorage.setItem('santa_current_v5', JSON.stringify(state));
+        switchToTab('draw');
+      }
+    }
+
+    function archiveCurrentDraw() {
+      alert('Losowanie zostało zapisane w zakładce "Historia"!');
+    }
+
+    function switchToTab(tab) {
+      const drawBtn = document.getElementById('navDrawBtn');
+      const historyBtn = document.getElementById('navHistoryBtn');
+
+      if (tab === 'draw') {
+        drawBtn.className = "flex-1 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-red-600 text-white shadow-md";
+        historyBtn.className = "flex-1 py-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white";
+        if (state.id) showDrawView(); else showSetupView();
+      } else {
+        historyBtn.className = "flex-1 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-amber-600 text-white shadow-md";
+        drawBtn.className = "flex-1 py-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white";
+        showHistoryView();
+      }
     }
 
     let currentGiver = '';
@@ -379,9 +503,8 @@
         ? "Wpisz swój 4-cyfrowy PIN, aby przypomnieć wynik:" 
         : "Ustal 4-cyfrowy PIN, aby zabezpieczyć swój wybór:";
 
-      document.getElementById('drawView').classList.add('hidden');
+      hideAllViews();
       document.getElementById('confirmView').classList.remove('hidden');
-      
       setTimeout(() => pinInput.focus(), 100);
     }
 
@@ -407,7 +530,7 @@
     }
 
     function showGiftScreen() {
-      document.getElementById('confirmView').classList.add('hidden');
+      hideAllViews();
       document.getElementById('giftView').classList.remove('hidden');
       document.getElementById('giftWrapper').classList.remove('open');
     }
@@ -449,8 +572,7 @@
         budgetCapsule.classList.add('hidden');
       }
 
-      document.getElementById('confirmView').classList.add('hidden');
-      document.getElementById('giftView').classList.add('hidden');
+      hideAllViews();
       document.getElementById('resultView').classList.remove('hidden');
     }
 
@@ -459,14 +581,14 @@
       showDrawView();
     }
 
-    function resetAll() {
-      if (confirm('Czy na pewno chcesz usunąć całe losowanie i zacząć od nowa?')) {
-        localStorage.removeItem('santa_state_v4');
-        state = { budget: '', names: [], pairs: {}, pins: {}, drawn: [] };
+    function confirmReset() {
+      const code = prompt('Aby utworzyć nowe losowanie, wpisz "RESET":');
+      if (code && code.toUpperCase() === 'RESET') {
+        localStorage.removeItem('santa_current_v5');
+        state = { id: null, title: '', budget: '', names: [], pairs: {}, pins: {}, drawn: [] };
         setupParticipants = [];
         renderSetupList();
-        document.getElementById('drawView').classList.add('hidden');
-        document.getElementById('setupView').classList.remove('hidden');
+        showSetupView();
       }
     }
   </script>
