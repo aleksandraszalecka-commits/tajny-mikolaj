@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Świąteczny Tajny Mikołaj 🎄</title>
+  <title>Tajny Mikołaj 🎄</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background: radial-gradient(circle at top, #1a2a6c, #b21f1f, #fdbb2d);
-      background-attachment: fixed;
+      background-color: #0b132b;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(220, 38, 38, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
     }
-    .font-festive {
-      font-family: 'Mountains of Christmas', cursive;
-    }
-    /* Animacja płatków śniegu */
+
+    /* Tło ze śniegiem */
     .snowflake {
       position: fixed;
       top: -10px;
-      color: white;
+      color: rgba(255, 255, 255, 0.4);
       user-select: none;
       pointer-events: none;
       z-index: 1;
@@ -29,51 +29,113 @@
     @keyframes fall {
       to { transform: translateY(105vh) rotate(360deg); }
     }
-    /* Animacja prezentu */
-    .gift-box {
-      cursor: pointer;
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    /* Animacja i interakcja Prezentu */
+    .gift-container {
+      perspective: 1000px;
     }
-    .gift-box:hover {
-      transform: scale(1.05) rotate(2deg);
+    .gift-box {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .gift-box:active {
-      transform: scale(0.95);
+      transform: scale(0.92);
     }
-    .lid {
-      transition: transform 0.5s ease;
+    .gift-lid {
+      position: absolute;
+      top: 0;
+      left: -8px;
+      width: 156px;
+      height: 36px;
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 20;
+      transition: transform 0.6s cubic-bezier(0.68, -0.6, 0.32, 1.6);
       transform-origin: top left;
+      border: 1px solid rgba(255,255,255,0.2);
     }
-    .open .lid {
-      transform: rotate(-45deg) translateY(-20px);
+    .gift-lid-ribbon {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 100%;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    }
+    .gift-body {
+      position: absolute;
+      bottom: 0;
+      width: 140px;
+      height: 115px;
+      background: linear-gradient(135deg, #b91c1c, #991b1b);
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 15px 25px rgba(0,0,0,0.4);
+      z-index: 10;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .gift-body-ribbon {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 100%;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    }
+    /* Stan otwartego prezentu */
+    .gift-box.opened .gift-lid {
+      transform: rotate(-55deg) translateY(-40px) translateX(-10px);
     }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 relative overflow-x-hidden text-slate-100">
+<body class="min-h-screen flex items-center justify-center p-4 text-slate-100">
 
-  <!-- PŁATKI ŚNIEGU -->
   <div id="snowContainer"></div>
 
-  <!-- GŁÓWNA KARTA APELKI -->
-  <main class="w-full max-w-md bg-slate-950/70 backdrop-blur-xl rounded-3xl p-6 border border-white/10 shadow-2xl z-10 my-auto">
+  <!-- APLIKACJA MAIN CONTAINER -->
+  <main class="w-full max-w-md bg-slate-900/80 backdrop-blur-2xl rounded-3xl p-6 border border-slate-800 shadow-2xl z-10 my-auto relative overflow-hidden">
     
-    <!-- EKRAN 1: SETUP -->
+    <!-- EKRAN 1: DODAWANIE UCZESTNIKÓW -->
     <div id="setupView">
       <div class="text-center mb-6">
-        <div class="inline-block p-4 rounded-full bg-red-500/20 mb-3 border border-red-500/30">
-          <span class="text-5xl">🎅</span>
+        <div class="inline-flex p-3 rounded-2xl bg-red-500/10 border border-red-500/20 mb-3">
+          <span class="text-4xl">🎁</span>
         </div>
-        <h1 class="text-4xl font-bold font-festive text-amber-300 tracking-wide">Tajny Mikołaj</h1>
-        <p class="text-slate-300 text-xs mt-1">Wpisz uczestników i rozpocznij losowanie na tym telefonie.</p>
+        <h1 class="text-2xl font-extrabold tracking-tight text-white">Tajny Mikołaj</h1>
+        <p class="text-slate-400 text-xs mt-1">Dodaj uczestników losowania</p>
       </div>
 
+      <!-- FORMULARZ DODAWANIA -->
       <div class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-amber-200/80 uppercase tracking-wider mb-2">Uczestnicy (każdy w nowej linii)</label>
-          <textarea id="namesInput" rows="5" placeholder="Anna&#10;Piotr&#10;Kasia&#10;Tomek" class="w-full bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all placeholder:text-slate-600 text-sm"></textarea>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Imię uczestnika</label>
+          <div class="flex gap-2">
+            <input type="text" id="nameInput" placeholder="np. Kasia" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all text-sm">
+            <button onclick="addParticipant()" class="bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold px-4 py-3 rounded-xl transition-all text-sm flex items-center gap-1 shadow-lg shadow-red-900/30">
+              <span>+</span> Dodaj
+            </button>
+          </div>
         </div>
-        <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-600 to-emerald-600 hover:from-red-500 hover:to-emerald-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-red-900/40 transition-transform active:scale-95 text-base flex items-center justify-center gap-2">
-          <span>🎄</span> Wylosuj pary i rozpocznij
+
+        <!-- LISTA DODANYCH UCZESTNIKÓW -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Uczestnicy</span>
+            <span id="participantCount" class="text-xs font-bold px-2 py-0.5 bg-slate-800 rounded-full text-slate-300">0 osób</span>
+          </div>
+          
+          <div id="participantsList" class="space-y-2 max-h-[220px] overflow-y-auto pr-1 min-h-[100px] bg-slate-950/50 p-2 rounded-2xl border border-slate-800/80">
+            <!-- Tutaj wskakują imiona -->
+          </div>
+        </div>
+
+        <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-600 to-emerald-600 hover:from-red-500 hover:to-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-950/50 transition-all active:scale-95 text-sm flex items-center justify-center gap-2 mt-4">
+          <span>🎲</span> Rozpocznij losowanie
         </button>
       </div>
     </div>
@@ -81,100 +143,106 @@
     <!-- EKRAN 2: LISTA OSOB DO LOSOWANIA -->
     <div id="drawView" class="hidden">
       <div class="text-center mb-6">
-        <span class="text-4xl">✨</span>
-        <h2 class="text-2xl font-bold font-festive text-amber-300 mt-1">Czas na losowanie!</h2>
-        <p class="text-slate-300 text-xs mt-1">Podaj telefon odpowiedniej osobie. Każdy klika tylko swoje imię.</p>
+        <span class="text-3xl">🎅</span>
+        <h2 class="text-xl font-bold text-white mt-1">Podaj telefon odpowiedniej osobie</h2>
+        <p id="progressStatus" class="text-slate-400 text-xs mt-1">Kliknij swoje imię z listy</p>
       </div>
 
-      <div id="buttonsList" class="space-y-3 max-h-[55vh] overflow-y-auto pr-1"></div>
+      <div id="buttonsList" class="space-y-2.5 max-h-[50vh] overflow-y-auto pr-1"></div>
 
-      <button onclick="resetAll()" class="w-full mt-6 text-xs text-slate-400 hover:text-red-400 underline transition-colors">
-        Resetuj całe losowanie
+      <button onclick="resetAll()" class="w-full mt-6 text-xs text-slate-500 hover:text-red-400 underline transition-colors">
+        Wykonaj nowe losowanie
       </button>
     </div>
 
     <!-- EKRAN 3: POTWIERDZENIE TOŻSAMOŚCI -->
     <div id="confirmView" class="hidden text-center py-4">
-      <div class="inline-block p-4 rounded-full bg-amber-500/20 mb-3 border border-amber-500/30 animate-pulse">
-        <span class="text-5xl">🕵️‍♂️</span>
+      <div class="inline-flex p-4 rounded-full bg-amber-500/10 border border-amber-500/20 mb-3">
+        <span class="text-4xl">👁️</span>
       </div>
-      <h3 class="text-lg font-semibold text-slate-300">Czy na ekran patrzy teraz:</h3>
-      <p id="confirmName" class="text-3xl font-extrabold text-amber-300 my-2 font-festive tracking-wide"></p>
-      <p class="text-xs text-slate-400 mb-6 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
-        Upewnij się, że nikt inny nie stoi za Twoimi plecami! 🙈
+      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Potwierdzenie tożsamości</h3>
+      <p id="confirmName" class="text-2xl font-extrabold text-white my-2"></p>
+      <p class="text-xs text-slate-400 mb-6 bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+        Upewnij się, że nikt inny nie patrzy teraz na Twój ekran!
       </p>
       
-      <div class="space-y-3">
-        <button onclick="showGiftScreen()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-2xl transition-transform active:scale-95 shadow-lg shadow-emerald-900/40">
-          Tak, to ja! Pokaż prezent 🎁
+      <div class="space-y-2.5">
+        <button onclick="showGiftScreen()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 shadow-lg shadow-emerald-950/40 text-sm">
+          Tak, to ja! Przejdź do prezentu 🎁
         </button>
-        <button onclick="showDrawView()" class="w-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-semibold py-3 rounded-2xl text-sm">
+        <button onclick="showDrawView()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 rounded-xl text-xs">
           Wróć do listy
         </button>
       </div>
     </div>
 
-    <!-- EKRAN 4: ANIMOWANY PREZENT DO OTWARCIA -->
-    <div id="giftView" class="hidden text-center py-6">
-      <h3 class="text-xl font-bold text-amber-300 mb-2">Dotknij prezent, aby go otworzyć!</h3>
-      <p class="text-xs text-slate-400 mb-8">Twój Mikołajowy cel jest w środku...</p>
+    <!-- EKRAN 4: PREZENT DO OTWARCIA -->
+    <div id="giftView" class="hidden text-center py-4">
+      <h3 class="text-lg font-bold text-white mb-1">Dotknij prezent!</h3>
+      <p class="text-xs text-slate-400 mb-8">Kliknij na pudełko, aby poznać wylosowaną osobę</p>
 
-      <div id="giftBox" onclick="openGift()" class="gift-box relative w-36 h-36 mx-auto mb-8 flex flex-col items-center justify-center">
-        <!-- Pokrywka -->
-        <div class="lid absolute -top-2 w-40 h-8 bg-red-600 rounded-lg shadow-md border-b-2 border-red-700 flex items-center justify-center z-20">
-          <div class="w-8 h-full bg-amber-400"></div>
-        </div>
-        <!-- Pudełko -->
-        <div class="w-36 h-32 bg-red-700 rounded-b-xl shadow-2xl flex items-center justify-center relative overflow-hidden z-10 border-t border-red-500">
-          <div class="w-8 h-full bg-amber-400"></div>
-          <div class="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent"></div>
+      <div class="gift-container my-4">
+        <div id="giftBox" onclick="openGift()" class="gift-box">
+          <div class="gift-lid">
+            <div class="gift-lid-ribbon"></div>
+          </div>
+          <div class="gift-body">
+            <div class="gift-body-ribbon"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- EKRAN 5: WYNIK (WYLOSOWANA OSOBA) -->
+    <!-- EKRAN 5: WYNIK LOSOWANIA -->
     <div id="resultView" class="hidden text-center py-4">
-      <span class="text-5xl">🎉</span>
-      <p class="text-sm font-semibold text-slate-300 mt-2">Kupujesz prezent dla:</p>
+      <span class="text-4xl">🎉</span>
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-3">Twoim Mikołajowym celem jest:</p>
       
-      <div class="my-6 p-6 rounded-2xl bg-gradient-to-r from-red-950/60 to-emerald-950/60 border border-amber-400/40 shadow-inner">
-        <div id="recipientName" class="text-4xl font-extrabold text-amber-300 font-festive tracking-wider"></div>
+      <div class="my-5 p-5 rounded-2xl bg-gradient-to-br from-red-950/40 to-slate-950 border border-red-500/30 shadow-inner">
+        <div id="recipientName" class="text-3xl font-black text-amber-400 tracking-wide"></div>
       </div>
       
-      <p class="text-xs text-amber-200/80 mb-6 bg-amber-500/10 p-3.5 rounded-xl border border-amber-500/20">
-        🤫 Zachowaj to w tajemnicy! Zapamiętaj lub zrób dyskretny zrzut ekranu.
+      <p class="text-xs text-slate-400 mb-6 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800">
+        🤫 Zrób zrzut ekranu lub zapamiętaj. Kliknij poniżej przed oddaniem telefonu.
       </p>
 
-      <button onclick="hideResult()" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-red-900/50 transition-transform active:scale-95">
-        🔒 Zasłoń i podaj telefon dalej
+      <button onclick="hideResult()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-950/50 transition-all active:scale-95 text-sm">
+        🔒 Ukryj i podaj telefon dalej
       </button>
     </div>
 
   </main>
 
   <script>
-    // Generowanie płatków śniegu w tle
+    // Generowanie subtelnych płatków śniegu
     const snowContainer = document.getElementById('snowContainer');
-    const snowflakes = ['❄', '❅', '❆'];
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 18; i++) {
       const flake = document.createElement('div');
       flake.className = 'snowflake';
-      flake.innerHTML = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+      flake.innerHTML = '❄';
       flake.style.left = Math.random() * 100 + 'vw';
-      flake.style.animationDuration = (Math.random() * 3 + 4) + 's';
-      flake.style.opacity = Math.random() * 0.7 + 0.3;
-      flake.style.fontSize = (Math.random() * 10 + 12) + 'px';
+      flake.style.animationDuration = (Math.random() * 4 + 6) + 's';
+      flake.style.opacity = Math.random() * 0.5 + 0.2;
+      flake.style.fontSize = (Math.random() * 8 + 10) + 'px';
       snowContainer.appendChild(flake);
     }
 
+    let setupParticipants = [];
     let state = {
       names: [],
       pairs: {},
       drawn: []
     };
 
+    // Nasłuchiwanie klawisza Enter w polu wpisywania imienia
+    document.getElementById('nameInput').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        addParticipant();
+      }
+    });
+
     window.onload = () => {
-      const savedState = localStorage.getItem('santa_state');
+      const savedState = localStorage.getItem('santa_state_v2');
       if (savedState) {
         state = JSON.parse(savedState);
         showDrawView();
@@ -182,18 +250,65 @@
     };
 
     function saveState() {
-      localStorage.setItem('santa_state', JSON.stringify(state));
+      localStorage.setItem('santa_state_v2', JSON.stringify(state));
     }
 
-    function startDraw() {
-      const input = document.getElementById('namesInput').value;
-      const names = input.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+    function addParticipant() {
+      const input = document.getElementById('nameInput');
+      const name = input.value.trim();
 
-      if (names.length < 3) {
-        alert('Wpisz co najmniej 3 osoby!');
+      if (!name) return;
+
+      if (setupParticipants.some(p => p.toLowerCase() === name.toLowerCase())) {
+        alert('Ta osoba jest już na liście!');
         return;
       }
 
+      setupParticipants.push(name);
+      input.value = '';
+      input.focus();
+      renderSetupList();
+    }
+
+    function removeParticipant(index) {
+      setupParticipants.splice(index, 1);
+      renderSetupList();
+    }
+
+    function renderSetupList() {
+      const list = document.getElementById('participantsList');
+      const count = document.getElementById('participantCount');
+      
+      count.textContent = `${setupParticipants.length} osób`;
+      list.innerHTML = '';
+
+      if (setupParticipants.length === 0) {
+        list.innerHTML = `<div class="text-center py-6 text-xs text-slate-600">Brak osób na liście. Wpisz imię powyżej.</div>`;
+        return;
+      }
+
+      setupParticipants.forEach((name, i) => {
+        const item = document.createElement('div');
+        item.className = 'flex justify-between items-center bg-slate-900 border border-slate-800/80 px-3.5 py-2.5 rounded-xl text-sm font-medium';
+        item.innerHTML = `
+          <span class="text-slate-200">${name}</span>
+          <button onclick="removeParticipant(${i})" class="text-slate-500 hover:text-red-400 p-1 transition-colors text-xs">
+            ✕
+          </button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    renderSetupList();
+
+    function startDraw() {
+      if (setupParticipants.length < 3) {
+        alert('Dodaj co najmniej 3 uczestników, aby rozpocząć losowanie!');
+        return;
+      }
+
+      const names = [...setupParticipants];
       let receivers = [...names];
       let valid = false;
 
@@ -227,21 +342,25 @@
       const listContainer = document.getElementById('buttonsList');
       listContainer.innerHTML = '';
 
+      const drawnCount = state.drawn.length;
+      const totalCount = state.names.length;
+      document.getElementById('progressStatus').textContent = `Wylosowano ${drawnCount} z ${totalCount} osób`;
+
       state.names.forEach(name => {
         const isDrawn = state.drawn.includes(name);
         const btn = document.createElement('button');
-        btn.className = `w-full p-4 rounded-2xl font-semibold text-left flex justify-between items-center transition-all ${
+        btn.className = `w-full p-4 rounded-xl font-semibold text-left flex justify-between items-center transition-all ${
           isDrawn 
-            ? 'bg-slate-900/40 text-slate-500 border border-slate-800/80 cursor-not-allowed opacity-60' 
-            : 'bg-gradient-to-r from-slate-800/90 to-slate-800/60 hover:from-slate-700/90 hover:to-slate-700/60 border border-slate-700/60 text-amber-100 shadow-md active:scale-98'
+            ? 'bg-slate-950/40 text-slate-600 border border-slate-900 cursor-not-allowed' 
+            : 'bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 text-white active:scale-98 shadow-sm'
         }`;
         
         btn.innerHTML = `
-          <span class="text-base">${name}</span>
-          <span class="text-xs px-3 py-1.5 rounded-full font-bold ${
-            isDrawn ? 'bg-slate-800 text-slate-500' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+          <span class="text-sm font-bold">${name}</span>
+          <span class="text-xs px-2.5 py-1 rounded-md font-semibold ${
+            isDrawn ? 'bg-slate-900 text-slate-600' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
           }">
-            ${isDrawn ? '✅ Otwarto' : 'Otwórz 🎁'}
+            ${isDrawn ? '✅ Wylosowano' : 'Otwórz 🎁'}
           </span>
         `;
 
@@ -265,22 +384,24 @@
     function showGiftScreen() {
       document.getElementById('confirmView').classList.add('hidden');
       document.getElementById('giftView').classList.remove('hidden');
-      document.getElementById('giftBox').classList.remove('open');
+      document.getElementById('giftBox').classList.remove('opened');
     }
 
     function openGift() {
       const giftBox = document.getElementById('giftBox');
-      giftBox.classList.add('open');
+      if (giftBox.classList.contains('opened')) return;
+
+      giftBox.classList.add('opened');
 
       if (navigator.vibrate) {
-        navigator.vibrate([100, 50, 100]);
+        navigator.vibrate([80, 40, 80]);
       }
 
       confetti({
-        particleCount: 80,
-        spread: 70,
+        particleCount: 90,
+        spread: 80,
         origin: { y: 0.6 },
-        colors: ['#fdbb2d', '#b21f1f', '#ffffff', '#10b981']
+        colors: ['#fbbf24', '#dc2626', '#ffffff', '#10b981']
       });
 
       setTimeout(() => {
@@ -294,7 +415,7 @@
           state.drawn.push(currentGiver);
           saveState();
         }
-      }, 700);
+      }, 750);
     }
 
     function hideResult() {
@@ -303,9 +424,11 @@
     }
 
     function resetAll() {
-      if (confirm('Czy na pewno chcesz usunąć całe losowanie i zacząć od nowa?')) {
-        localStorage.removeItem('santa_state');
+      if (confirm('Czy na pewno chcesz usunąć to losowanie i utworzyć nowe?')) {
+        localStorage.removeItem('santa_state_v2');
         state = { names: [], pairs: {}, drawn: [] };
+        setupParticipants = [];
+        renderSetupList();
         document.getElementById('drawView').classList.add('hidden');
         document.getElementById('setupView').classList.remove('hidden');
       }
