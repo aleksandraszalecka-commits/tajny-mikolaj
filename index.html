@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tajny Mikołaj 🎄</title>
+  <title>Tajny Mikołaj ??</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #0b132b;
+      background: #090d16;
       background-image: 
-        radial-gradient(at 0% 0%, rgba(220, 38, 38, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
+        radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.25) 0%, transparent 70%),
+        radial-gradient(circle at 80% 100%, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
     }
 
-    /* Tło ze śniegiem */
+    /* Płatki śniegu */
     .snowflake {
       position: fixed;
       top: -10px;
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.35);
       user-select: none;
       pointer-events: none;
       z-index: 1;
@@ -30,66 +30,37 @@
       to { transform: translateY(105vh) rotate(360deg); }
     }
 
-    /* Animacja i interakcja Prezentu */
-    .gift-container {
+    /* Prezent SVG 3D Animacja */
+    .gift-wrapper {
       perspective: 1000px;
-    }
-    .gift-box {
-      position: relative;
-      width: 140px;
-      height: 140px;
-      margin: 0 auto;
       cursor: pointer;
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .gift-box:active {
-      transform: scale(0.92);
+    .gift-svg {
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .gift-lid {
-      position: absolute;
-      top: 0;
-      left: -8px;
-      width: 156px;
-      height: 36px;
-      background: linear-gradient(135deg, #dc2626, #b91c1c);
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      z-index: 20;
-      transition: transform 0.6s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-      transform-origin: top left;
-      border: 1px solid rgba(255,255,255,0.2);
+    .gift-wrapper:hover .gift-svg {
+      transform: scale(1.05) rotate(2deg);
     }
-    .gift-lid-ribbon {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 24px;
-      height: 100%;
-      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    .gift-wrapper:active .gift-svg {
+      transform: scale(0.95);
     }
-    .gift-body {
-      position: absolute;
-      bottom: 0;
-      width: 140px;
-      height: 115px;
-      background: linear-gradient(135deg, #b91c1c, #991b1b);
-      border-radius: 0 0 16px 16px;
-      box-shadow: 0 15px 25px rgba(0,0,0,0.4);
-      z-index: 10;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.1);
+
+    .lid-group {
+      transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transform-origin: 100px 45px;
     }
-    .gift-body-ribbon {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 24px;
-      height: 100%;
-      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+
+    .gift-wrapper.open .lid-group {
+      transform: translateY(-75px) rotate(-38deg) translateX(-18px);
     }
-    /* Stan otwartego prezentu */
-    .gift-box.opened .gift-lid {
-      transform: rotate(-55deg) translateY(-40px) translateX(-10px);
+
+    /* Efekt błysku z wnętrza */
+    .glow-effect {
+      opacity: 0;
+      transition: opacity 0.5s ease 0.2s;
+    }
+    .gift-wrapper.open .glow-effect {
+      opacity: 1;
     }
   </style>
 </head>
@@ -97,129 +68,157 @@
 
   <div id="snowContainer"></div>
 
-  <!-- APLIKACJA MAIN CONTAINER -->
   <main class="w-full max-w-md bg-slate-900/80 backdrop-blur-2xl rounded-3xl p-6 border border-slate-800 shadow-2xl z-10 my-auto relative overflow-hidden">
     
-    <!-- EKRAN 1: DODAWANIE UCZESTNIKÓW -->
+    <!-- EKRAN 1: KONFIGURACJA -->
     <div id="setupView">
       <div class="text-center mb-6">
         <div class="inline-flex p-3 rounded-2xl bg-red-500/10 border border-red-500/20 mb-3">
-          <span class="text-4xl">🎁</span>
+          <span class="text-4xl">??</span>
         </div>
-        <h1 class="text-2xl font-extrabold tracking-tight text-white">Tajny Mikołaj</h1>
-        <p class="text-slate-400 text-xs mt-1">Dodaj uczestników losowania</p>
+        <h1 class="text-2xl font-extrabold text-white tracking-tight">Tajny Mikołaj</h1>
+        <p class="text-slate-400 text-xs mt-1">Dodaj uczestników i rozpocznij losowanie</p>
       </div>
 
-      <!-- FORMULARZ DODAWANIA -->
       <div class="space-y-4">
+        <!-- Budżet -->
         <div>
-          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Imię uczestnika</label>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Sugerowany budżet</label>
+          <input type="text" id="budgetInput" value="200 zł" placeholder="np. 200 zł" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-amber-400 font-bold placeholder:font-normal placeholder:text-slate-600 focus:outline-none focus:border-amber-400 transition-all text-sm">
+        </div>
+
+        <!-- Uczestnicy -->
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Dodaj uczestnika</label>
           <div class="flex gap-2">
-            <input type="text" id="nameInput" placeholder="np. Kasia" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all text-sm">
-            <button onclick="addParticipant()" class="bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold px-4 py-3 rounded-xl transition-all text-sm flex items-center gap-1 shadow-lg shadow-red-900/30">
+            <input type="text" id="nameInput" placeholder="Imię..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-all text-sm">
+            <button onclick="addParticipant()" class="bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold px-4 py-3 rounded-xl transition-all text-sm flex items-center gap-1 shadow-lg shadow-red-950/40">
               <span>+</span> Dodaj
             </button>
           </div>
         </div>
 
-        <!-- LISTA DODANYCH UCZESTNIKÓW -->
+        <!-- Lista -->
         <div>
           <div class="flex justify-between items-center mb-2">
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Uczestnicy</span>
-            <span id="participantCount" class="text-xs font-bold px-2 py-0.5 bg-slate-800 rounded-full text-slate-300">0 osób</span>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Lista osób</span>
+            <span id="participantCount" class="text-xs font-bold px-2.5 py-0.5 bg-slate-800 rounded-full text-slate-300">0 osób</span>
           </div>
           
-          <div id="participantsList" class="space-y-2 max-h-[220px] overflow-y-auto pr-1 min-h-[100px] bg-slate-950/50 p-2 rounded-2xl border border-slate-800/80">
-            <!-- Tutaj wskakują imiona -->
-          </div>
+          <div id="participantsList" class="space-y-2 max-h-[180px] overflow-y-auto pr-1 min-h-[90px] bg-slate-950/60 p-2.5 rounded-2xl border border-slate-800/80"></div>
         </div>
 
-        <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-600 to-emerald-600 hover:from-red-500 hover:to-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-950/50 transition-all active:scale-95 text-sm flex items-center justify-center gap-2 mt-4">
-          <span>🎲</span> Rozpocznij losowanie
+        <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-600 to-emerald-600 hover:from-red-500 hover:to-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-950/50 transition-all active:scale-95 text-sm flex items-center justify-center gap-2 mt-2">
+          <span>??</span> Rozpocznij losowanie
         </button>
       </div>
     </div>
 
-    <!-- EKRAN 2: LISTA OSOB DO LOSOWANIA -->
+    <!-- EKRAN 2: LISTA UŻYTKOWNIKÓW DO PODANIA TELEFONU -->
     <div id="drawView" class="hidden">
       <div class="text-center mb-6">
-        <span class="text-3xl">🎅</span>
-        <h2 class="text-xl font-bold text-white mt-1">Podaj telefon odpowiedniej osobie</h2>
+        <span class="text-3xl">??</span>
+        <h2 class="text-xl font-bold text-white mt-1">Przekaż telefon</h2>
         <p id="progressStatus" class="text-slate-400 text-xs mt-1">Kliknij swoje imię z listy</p>
       </div>
 
       <div id="buttonsList" class="space-y-2.5 max-h-[50vh] overflow-y-auto pr-1"></div>
 
       <button onclick="resetAll()" class="w-full mt-6 text-xs text-slate-500 hover:text-red-400 underline transition-colors">
-        Wykonaj nowe losowanie
+        Zresetuj całe losowanie
       </button>
     </div>
 
-    <!-- EKRAN 3: POTWIERDZENIE TOŻSAMOŚCI -->
+    <!-- EKRAN 3: KOD PIN / POTWIERDZENIE -->
     <div id="confirmView" class="hidden text-center py-4">
-      <div class="inline-flex p-4 rounded-full bg-amber-500/10 border border-amber-500/20 mb-3">
-        <span class="text-4xl">👁️</span>
+      <div class="inline-flex p-3 rounded-full bg-amber-500/10 border border-amber-500/20 mb-3">
+        <span class="text-3xl">??</span>
       </div>
-      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Potwierdzenie tożsamości</h3>
-      <p id="confirmName" class="text-2xl font-extrabold text-white my-2"></p>
-      <p class="text-xs text-slate-400 mb-6 bg-slate-950/60 p-3 rounded-xl border border-slate-800">
-        Upewnij się, że nikt inny nie patrzy teraz na Twój ekran!
-      </p>
+      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Weryfikacja</h3>
+      <p id="confirmName" class="text-2xl font-extrabold text-white my-1"></p>
       
-      <div class="space-y-2.5">
-        <button onclick="showGiftScreen()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 shadow-lg shadow-emerald-950/40 text-sm">
-          Tak, to ja! Przejdź do prezentu 🎁
+      <div id="pinSection" class="my-4">
+        <p id="pinInstruction" class="text-xs text-slate-400 mb-3">Ustal swój 4-cyfrowy PIN, aby tylko Ty móc podglądnąć wynik później:</p>
+        <input type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric" id="pinInput" placeholder="****" class="w-32 text-center text-2xl tracking-[0.5em] font-bold bg-slate-950 border border-slate-700 rounded-xl py-2 text-amber-400 focus:outline-none focus:border-amber-400">
+      </div>
+      
+      <div class="space-y-2 mt-4">
+        <button onclick="handlePinSubmit()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 text-sm shadow-lg shadow-emerald-950/40">
+          Zatwierdź i Otwórz Prezent ??
         </button>
-        <button onclick="showDrawView()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 rounded-xl text-xs">
-          Wróć do listy
+        <button onclick="showDrawView()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-2.5 rounded-xl text-xs">
+          Anuluj
         </button>
       </div>
     </div>
 
-    <!-- EKRAN 4: PREZENT DO OTWARCIA -->
+    <!-- EKRAN 4: PREZENT SVG 3D -->
     <div id="giftView" class="hidden text-center py-4">
       <h3 class="text-lg font-bold text-white mb-1">Dotknij prezent!</h3>
-      <p class="text-xs text-slate-400 mb-8">Kliknij na pudełko, aby poznać wylosowaną osobę</p>
+      <p class="text-xs text-slate-400 mb-6">Stuknij w pudełko, aby poznać wylosowaną osobę</p>
 
-      <div class="gift-container my-4">
-        <div id="giftBox" onclick="openGift()" class="gift-box">
-          <div class="gift-lid">
-            <div class="gift-lid-ribbon"></div>
-          </div>
-          <div class="gift-body">
-            <div class="gift-body-ribbon"></div>
-          </div>
-        </div>
+      <div class="gift-wrapper flex justify-center my-4" id="giftWrapper" onclick="openGift()">
+        <svg class="gift-svg w-48 h-48" viewBox="0 0 200 200">
+          <defs>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Poświata wewnątrz -->
+          <circle class="glow-effect" cx="100" cy="110" r="50" fill="#fbbf24" filter="url(#glow)" />
+
+          <!-- Pudełko spód -->
+          <rect x="45" y="85" width="110" height="90" rx="8" fill="#b91c1c" />
+          
+          <!-- Pionowa wstążka -->
+          <rect x="88" y="85" width="24" height="90" fill="#fbbf24" />
+
+          <!-- Pokrywka -->
+          <g class="lid-group">
+            <rect x="38" y="60" width="124" height="30" rx="6" fill="#dc2626" />
+            <rect x="88" y="60" width="24" height="30" fill="#fbbf24" />
+            <!-- Kokarda -->
+            <path d="M 80 60 C 60 35, 90 25, 98 60 Z" fill="#f59e0b" />
+            <path d="M 120 60 C 140 35, 110 25, 102 60 Z" fill="#f59e0b" />
+            <circle cx="100" cy="58" r="7" fill="#fbbf24" />
+          </g>
+        </svg>
       </div>
     </div>
 
-    <!-- EKRAN 5: WYNIK LOSOWANIA -->
-    <div id="resultView" class="hidden text-center py-4">
-      <span class="text-4xl">🎉</span>
-      <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-3">Twoim Mikołajowym celem jest:</p>
+    <!-- EKRAN 5: WYNIK -->
+    <div id="resultView" class="hidden text-center py-2">
+      <span class="text-4xl">??</span>
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-2">Kupujesz prezent dla:</p>
       
-      <div class="my-5 p-5 rounded-2xl bg-gradient-to-br from-red-950/40 to-slate-950 border border-red-500/30 shadow-inner">
+      <div class="my-4 p-5 rounded-2xl bg-slate-950 border border-amber-500/30 shadow-inner">
         <div id="recipientName" class="text-3xl font-black text-amber-400 tracking-wide"></div>
+        <div id="budgetCapsule" class="inline-block mt-2 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full text-xs text-amber-300 font-semibold"></div>
       </div>
       
-      <p class="text-xs text-slate-400 mb-6 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800">
-        🤫 Zrób zrzut ekranu lub zapamiętaj. Kliknij poniżej przed oddaniem telefonu.
+      <p class="text-xs text-slate-400 mb-5 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+        ?? Kod PIN został zapisany. Zapamiętaj go, jeśli zechcesz sprawdzić wynik ponownie na tym telefonie.
       </p>
 
-      <button onclick="hideResult()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-950/50 transition-all active:scale-95 text-sm">
-        🔒 Ukryj i podaj telefon dalej
+      <button onclick="hideResult()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-red-950/50 transition-all active:scale-95 text-sm">
+        ?? Zamknij i podaj telefon dalej
       </button>
     </div>
 
   </main>
 
   <script>
-    // Generowanie subtelnych płatków śniegu
+    // Generowanie płatków śniegu w tle
     const snowContainer = document.getElementById('snowContainer');
-    for (let i = 0; i < 18; i++) {
+    for (let i = 0; i < 20; i++) {
       const flake = document.createElement('div');
       flake.className = 'snowflake';
-      flake.innerHTML = '❄';
+      flake.innerHTML = '?';
       flake.style.left = Math.random() * 100 + 'vw';
       flake.style.animationDuration = (Math.random() * 4 + 6) + 's';
       flake.style.opacity = Math.random() * 0.5 + 0.2;
@@ -227,22 +226,41 @@
       snowContainer.appendChild(flake);
     }
 
+    // Świąteczny dźwięk dzwonków (Web Audio API)
+    function playJingle() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, index) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.08, ctx.currentTime + index * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + index * 0.1 + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + index * 0.1);
+          osc.stop(ctx.currentTime + index * 0.1 + 0.4);
+        });
+      } catch (e) {}
+    }
+
     let setupParticipants = [];
     let state = {
+      budget: '',
       names: [],
       pairs: {},
+      pins: {},
       drawn: []
     };
 
-    // Nasłuchiwanie klawisza Enter w polu wpisywania imienia
-    document.getElementById('nameInput').addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        addParticipant();
-      }
+    document.getElementById('nameInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addParticipant();
     });
 
     window.onload = () => {
-      const savedState = localStorage.getItem('santa_state_v2');
+      const savedState = localStorage.getItem('santa_state_v3');
       if (savedState) {
         state = JSON.parse(savedState);
         showDrawView();
@@ -250,20 +268,17 @@
     };
 
     function saveState() {
-      localStorage.setItem('santa_state_v2', JSON.stringify(state));
+      localStorage.setItem('santa_state_v3', JSON.stringify(state));
     }
 
     function addParticipant() {
       const input = document.getElementById('nameInput');
       const name = input.value.trim();
-
       if (!name) return;
-
       if (setupParticipants.some(p => p.toLowerCase() === name.toLowerCase())) {
         alert('Ta osoba jest już na liście!');
         return;
       }
-
       setupParticipants.push(name);
       input.value = '';
       input.focus();
@@ -277,9 +292,7 @@
 
     function renderSetupList() {
       const list = document.getElementById('participantsList');
-      const count = document.getElementById('participantCount');
-      
-      count.textContent = `${setupParticipants.length} osób`;
+      document.getElementById('participantCount').textContent = `${setupParticipants.length} osób`;
       list.innerHTML = '';
 
       if (setupParticipants.length === 0) {
@@ -292,19 +305,16 @@
         item.className = 'flex justify-between items-center bg-slate-900 border border-slate-800/80 px-3.5 py-2.5 rounded-xl text-sm font-medium';
         item.innerHTML = `
           <span class="text-slate-200">${name}</span>
-          <button onclick="removeParticipant(${i})" class="text-slate-500 hover:text-red-400 p-1 transition-colors text-xs">
-            ✕
-          </button>
+          <button onclick="removeParticipant(${i})" class="text-slate-500 hover:text-red-400 p-1 transition-colors text-xs">?</button>
         `;
         list.appendChild(item);
       });
     }
-
     renderSetupList();
 
     function startDraw() {
       if (setupParticipants.length < 3) {
-        alert('Dodaj co najmniej 3 uczestników, aby rozpocząć losowanie!');
+        alert('Dodaj co najmniej 3 uczestników!');
         return;
       }
 
@@ -312,6 +322,7 @@
       let receivers = [...names];
       let valid = false;
 
+      // Algorytm deranżacji (nikt nie losuje siebie)
       while (!valid) {
         for (let i = receivers.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -320,8 +331,10 @@
         valid = names.every((giver, index) => giver !== receivers[index]);
       }
 
+      state.budget = document.getElementById('budgetInput').value.trim();
       state.names = names;
       state.pairs = {};
+      state.pins = {};
       state.drawn = [];
 
       names.forEach((giver, index) => {
@@ -342,32 +355,27 @@
       const listContainer = document.getElementById('buttonsList');
       listContainer.innerHTML = '';
 
-      const drawnCount = state.drawn.length;
-      const totalCount = state.names.length;
-      document.getElementById('progressStatus').textContent = `Wylosowano ${drawnCount} z ${totalCount} osób`;
+      document.getElementById('progressStatus').textContent = `Wylosowano ${state.drawn.length} z ${state.names.length} osób`;
 
       state.names.forEach(name => {
         const isDrawn = state.drawn.includes(name);
         const btn = document.createElement('button');
         btn.className = `w-full p-4 rounded-xl font-semibold text-left flex justify-between items-center transition-all ${
           isDrawn 
-            ? 'bg-slate-950/40 text-slate-600 border border-slate-900 cursor-not-allowed' 
+            ? 'bg-slate-950/40 text-slate-500 border border-slate-900' 
             : 'bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 text-white active:scale-98 shadow-sm'
         }`;
         
         btn.innerHTML = `
           <span class="text-sm font-bold">${name}</span>
           <span class="text-xs px-2.5 py-1 rounded-md font-semibold ${
-            isDrawn ? 'bg-slate-900 text-slate-600' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+            isDrawn ? 'bg-slate-900 text-slate-500' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
           }">
-            ${isDrawn ? '✅ Wylosowano' : 'Otwórz 🎁'}
+            ${isDrawn ? '?? Zobacz ponownie' : 'Otwórz ??'}
           </span>
         `;
 
-        if (!isDrawn) {
-          btn.onclick = () => askConfirmation(name);
-        }
-
+        btn.onclick = () => askConfirmation(name);
         listContainer.appendChild(btn);
       });
     }
@@ -377,25 +385,53 @@
     function askConfirmation(name) {
       currentGiver = name;
       document.getElementById('confirmName').textContent = name;
+      const pinInput = document.getElementById('pinInput');
+      pinInput.value = '';
+
+      const isDrawn = state.drawn.includes(name);
+      document.getElementById('pinInstruction').textContent = isDrawn 
+        ? "Wpisz swój 4-cyfrowy PIN, aby zobaczyć wynik:" 
+        : "Ustal swój 4-cyfrowy PIN (zapamiętaj go!):";
+
       document.getElementById('drawView').classList.add('hidden');
       document.getElementById('confirmView').classList.remove('hidden');
+    }
+
+    function handlePinSubmit() {
+      const pin = document.getElementById('pinInput').value.trim();
+      if (pin.length !== 4 || isNaN(pin)) {
+        alert('PIN musi składać się dokładnie z 4 cyfr!');
+        return;
+      }
+
+      const isDrawn = state.drawn.includes(currentGiver);
+
+      if (isDrawn) {
+        if (state.pins[currentGiver] !== pin) {
+          alert('Niepoprawny PIN!');
+          return;
+        }
+        showResultScreen();
+      } else {
+        state.pins[currentGiver] = pin;
+        showGiftScreen();
+      }
     }
 
     function showGiftScreen() {
       document.getElementById('confirmView').classList.add('hidden');
       document.getElementById('giftView').classList.remove('hidden');
-      document.getElementById('giftBox').classList.remove('opened');
+      document.getElementById('giftWrapper').classList.remove('open');
     }
 
     function openGift() {
-      const giftBox = document.getElementById('giftBox');
-      if (giftBox.classList.contains('opened')) return;
+      const wrapper = document.getElementById('giftWrapper');
+      if (wrapper.classList.contains('open')) return;
 
-      giftBox.classList.add('opened');
+      wrapper.classList.add('open');
+      playJingle();
 
-      if (navigator.vibrate) {
-        navigator.vibrate([80, 40, 80]);
-      }
+      if (navigator.vibrate) navigator.vibrate([80, 40, 80]);
 
       confetti({
         particleCount: 90,
@@ -405,17 +441,29 @@
       });
 
       setTimeout(() => {
-        const recipient = state.pairs[currentGiver];
-        document.getElementById('recipientName').textContent = recipient;
-        
-        document.getElementById('giftView').classList.add('hidden');
-        document.getElementById('resultView').classList.remove('hidden');
-
         if (!state.drawn.includes(currentGiver)) {
           state.drawn.push(currentGiver);
           saveState();
         }
+        showResultScreen();
       }, 750);
+    }
+
+    function showResultScreen() {
+      const recipient = state.pairs[currentGiver];
+      document.getElementById('recipientName').textContent = recipient;
+      
+      const budgetCapsule = document.getElementById('budgetCapsule');
+      if (state.budget) {
+        budgetCapsule.textContent = `Budżet: ${state.budget}`;
+        budgetCapsule.classList.remove('hidden');
+      } else {
+        budgetCapsule.classList.add('hidden');
+      }
+
+      document.getElementById('confirmView').classList.add('hidden');
+      document.getElementById('giftView').classList.add('hidden');
+      document.getElementById('resultView').classList.remove('hidden');
     }
 
     function hideResult() {
@@ -424,9 +472,9 @@
     }
 
     function resetAll() {
-      if (confirm('Czy na pewno chcesz usunąć to losowanie i utworzyć nowe?')) {
-        localStorage.removeItem('santa_state_v2');
-        state = { names: [], pairs: {}, drawn: [] };
+      if (confirm('Czy na pewno chcesz usunąć całe losowanie i zacząć od nowa?')) {
+        localStorage.removeItem('santa_state_v3');
+        state = { budget: '', names: [], pairs: {}, pins: {}, drawn: [] };
         setupParticipants = [];
         renderSetupList();
         document.getElementById('drawView').classList.add('hidden');
