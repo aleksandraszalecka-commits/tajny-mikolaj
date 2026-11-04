@@ -10,10 +10,27 @@
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: background 0.5s ease;
+    }
+    
+    /* Motywy */
+    body.theme-red {
       background: #090d16;
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.25) 0%, transparent 70%),
+        radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.3) 0%, transparent 70%),
         radial-gradient(circle at 80% 100%, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+    }
+    body.theme-gold {
+      background: #140f07;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.3) 0%, transparent 70%),
+        radial-gradient(circle at 80% 100%, rgba(217, 119, 6, 0.2) 0%, transparent 70%);
+    }
+    body.theme-blue {
+      background: #051329;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.3) 0%, transparent 70%),
+        radial-gradient(circle at 80% 100%, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
     }
 
     .snowflake {
@@ -29,92 +46,76 @@
       to { transform: translateY(105vh) rotate(360deg); }
     }
 
-    .gift-wrapper {
-      perspective: 1000px;
-      cursor: pointer;
-    }
-    .gift-svg {
-      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .gift-wrapper:hover .gift-svg {
-      transform: scale(1.05) rotate(2deg);
-    }
-    .gift-wrapper:active .gift-svg {
-      transform: scale(0.95);
-    }
-
-    .lid-group {
-      transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      transform-origin: 100px 45px;
-    }
-
-    .gift-wrapper.open .lid-group {
-      transform: translateY(-75px) rotate(-38deg) translateX(-18px);
-    }
-
-    .glow-effect {
-      opacity: 0;
-      transition: opacity 0.5s ease 0.2s;
-    }
-    .gift-wrapper.open .glow-effect {
-      opacity: 1;
-    }
+    .gift-wrapper { perspective: 1000px; cursor: pointer; }
+    .gift-svg { transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .gift-wrapper:hover .gift-svg { transform: scale(1.05) rotate(2deg); }
+    .gift-wrapper:active .gift-svg { transform: scale(0.95); }
+    .lid-group { transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform-origin: 100px 45px; }
+    .gift-wrapper.open .lid-group { transform: translateY(-75px) rotate(-38deg) translateX(-18px); }
+    .glow-effect { opacity: 0; transition: opacity 0.5s ease 0.2s; }
+    .gift-wrapper.open .glow-effect { opacity: 1; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between p-4 text-slate-100 max-w-md mx-auto">
+<body class="theme-red min-h-screen flex flex-col justify-between p-4 text-slate-100 max-w-md mx-auto">
 
   <div id="snowContainer"></div>
 
-  <!-- APLIKACJA MAIN CONTAINER -->
+  <!-- MAIN CONTAINER -->
   <main class="w-full bg-slate-900/90 backdrop-blur-2xl rounded-3xl p-6 border border-slate-800 shadow-2xl z-10 my-auto relative overflow-hidden">
     
+    <!-- MOTYWY BARWNE NA GÓRZE -->
+    <div class="flex justify-end gap-1.5 mb-3">
+      <button onclick="setTheme('red')" class="w-5 h-5 rounded-full bg-red-600 border border-white/20 active:scale-95"></button>
+      <button onclick="setTheme('gold')" class="w-5 h-5 rounded-full bg-amber-500 border border-white/20 active:scale-95"></button>
+      <button onclick="setTheme('blue')" class="w-5 h-5 rounded-full bg-sky-500 border border-white/20 active:scale-95"></button>
+    </div>
+
     <!-- EKRAN 1: SETUP -->
     <div id="setupView">
-      <div class="text-center mb-6">
-        <div class="inline-flex p-3 rounded-2xl bg-red-500/10 border border-red-500/20 mb-3">
+      <div class="text-center mb-4">
+        <div class="inline-flex p-3 rounded-2xl bg-red-500/10 border border-red-500/20 mb-2">
           <span class="text-4xl">🎅</span>
         </div>
         <h1 class="text-2xl font-extrabold text-white tracking-tight">Nowe Losowanie</h1>
-        <p class="text-slate-400 text-xs mt-1">Utwórz nową listę uczestników</p>
+        <p class="text-slate-400 text-xs mt-1">Stwórz nową listę uczestników</p>
       </div>
 
-      <div class="space-y-4">
+      <div class="space-y-3">
         <div>
-          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Nazwa losowania</label>
-          <input type="text" id="drawTitleInput" placeholder="np. Wigilia 2026" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-all text-sm">
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Nazwa losowania</label>
+          <input type="text" id="drawTitleInput" placeholder="np. Wigilia 2026" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 transition-all text-sm">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Sugerowany budżet</label>
-          <input type="text" id="budgetInput" value="200 zł" placeholder="np. 200 zł" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-amber-400 font-bold placeholder:font-normal placeholder:text-slate-600 focus:outline-none focus:border-amber-400 transition-all text-sm">
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Sugerowany budżet</label>
+          <input type="text" id="budgetInput" value="200 zł" placeholder="np. 200 zł" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-amber-400 font-bold placeholder:font-normal placeholder:text-slate-600 focus:outline-none focus:border-amber-400 transition-all text-sm">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Dodaj uczestnika</label>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Dodaj uczestnika</label>
           <div class="flex gap-2">
-            <input type="text" id="nameInput" placeholder="Imię..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-all text-sm">
-            <button onclick="addParticipant()" class="bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold px-4 py-3 rounded-xl transition-all text-sm flex items-center gap-1 shadow-lg shadow-red-950/40">
+            <input type="text" id="nameInput" placeholder="Imię..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500 transition-all text-sm">
+            <button onclick="addParticipant()" class="bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold px-4 py-2.5 rounded-xl transition-all text-sm flex items-center gap-1 shadow-lg shadow-red-950/40">
               <span>+</span> Dodaj
             </button>
           </div>
         </div>
 
         <div>
-          <div class="flex justify-between items-center mb-2">
+          <div class="flex justify-between items-center mb-1.5">
             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Uczestnicy</span>
             <span id="participantCount" class="text-xs font-bold px-2.5 py-0.5 bg-slate-800 rounded-full text-slate-300">0 osób</span>
           </div>
-          
-          <div id="participantsList" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 min-h-[80px] bg-slate-950/60 p-2.5 rounded-2xl border border-slate-800/80"></div>
+          <div id="participantsList" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-1 min-h-[60px] bg-slate-950/60 p-2 rounded-2xl border border-slate-800/80"></div>
         </div>
 
-        <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-600 to-emerald-600 hover:from-red-500 hover:to-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-950/50 transition-all active:scale-95 text-sm flex items-center justify-center gap-2 mt-2">
+        <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-600 to-emerald-600 hover:from-red-500 hover:to-emerald-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-red-950/50 transition-all active:scale-95 text-sm flex items-center justify-center gap-2 mt-1">
           <span>🎲</span> Rozpocznij losowanie
         </button>
       </div>
     </div>
 
-    <!-- EKRAN 2: LISTA OSOB (LOSOWANIE) -->
+    <!-- EKRAN 2: LISTA OSOB -->
     <div id="drawView" class="hidden">
       <div class="text-center mb-5">
         <span class="text-3xl">🎁</span>
@@ -134,33 +135,49 @@
       </div>
     </div>
 
-    <!-- EKRAN 3: HISTORIA LOSOWAŃ -->
+    <!-- EKRAN 3: HISTORIA + EKSPORT/IMPORT -->
     <div id="historyView" class="hidden">
-      <div class="text-center mb-6">
-        <div class="inline-flex p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 mb-3">
+      <div class="text-center mb-4">
+        <div class="inline-flex p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 mb-2">
           <span class="text-3xl">📁</span>
         </div>
         <h2 class="text-xl font-bold text-white tracking-tight">Historia Losowań</h2>
-        <p class="text-slate-400 text-xs mt-1">Wszystkie zapisane losowania</p>
+        <p class="text-slate-400 text-xs mt-1">Kopie zapasowe i archiwum</p>
       </div>
 
-      <div id="historyList" class="space-y-3 max-h-[55vh] overflow-y-auto pr-1"></div>
+      <!-- PRZYCISKI KOPII ZAPASOWEJ -->
+      <div class="flex gap-2 mb-4">
+        <button onclick="exportBackup()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-xs text-amber-300 font-semibold py-2.5 rounded-xl border border-slate-700">
+          📥 Pobierz kopię (.json)
+        </button>
+        <label class="flex-1 bg-slate-800 hover:bg-slate-700 text-xs text-emerald-300 font-semibold py-2.5 rounded-xl border border-slate-700 text-center cursor-pointer">
+          📤 Wczytaj kopię
+          <input type="file" id="importFileInput" accept=".json" onchange="importBackup(event)" class="hidden">
+        </label>
+      </div>
+
+      <div id="historyList" class="space-y-3 max-h-[45vh] overflow-y-auto pr-1"></div>
     </div>
 
-    <!-- EKRAN 4: PIN / VERIFY -->
-    <div id="confirmView" class="hidden text-center py-4">
-      <div class="inline-flex p-3 rounded-full bg-amber-500/10 border border-amber-500/20 mb-3">
+    <!-- EKRAN 4: PIN & WISH-LIST INPUT -->
+    <div id="confirmView" class="hidden text-center py-2">
+      <div class="inline-flex p-3 rounded-full bg-amber-500/10 border border-amber-500/20 mb-2">
         <span class="text-3xl">🔒</span>
       </div>
       <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Weryfikacja PIN</h3>
       <p id="confirmName" class="text-2xl font-extrabold text-white my-1"></p>
       
-      <div id="pinSection" class="my-4">
-        <p id="pinInstruction" class="text-xs text-slate-400 mb-3"></p>
-        <input type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric" id="pinInput" placeholder="****" class="w-36 text-center text-3xl tracking-[0.4em] font-bold bg-slate-950 border border-slate-700 rounded-xl py-2.5 text-amber-400 focus:outline-none focus:border-amber-400">
+      <div id="pinSection" class="my-3">
+        <p id="pinInstruction" class="text-xs text-slate-400 mb-2"></p>
+        <input type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric" id="pinInput" placeholder="****" class="w-36 text-center text-3xl tracking-[0.4em] font-bold bg-slate-950 border border-slate-700 rounded-xl py-2 text-amber-400 focus:outline-none focus:border-amber-400">
+      </div>
+
+      <div id="wishlistSection" class="mb-4 text-left">
+        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Twój pomysł na prezent (opcjonalnie):</label>
+        <input type="text" id="wishlistInput" placeholder="np. Książka fantasy, kawa..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-400">
       </div>
       
-      <div class="space-y-2 mt-4">
+      <div class="space-y-2">
         <button onclick="handlePinSubmit()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 text-sm shadow-lg shadow-emerald-950/40">
           Zatwierdź PIN 🔑
         </button>
@@ -180,17 +197,12 @@
           <defs>
             <filter id="glow">
               <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
+              <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
-
           <circle class="glow-effect" cx="100" cy="110" r="50" fill="#fbbf24" filter="url(#glow)" />
           <rect x="45" y="85" width="110" height="90" rx="8" fill="#b91c1c" />
           <rect x="88" y="85" width="24" height="90" fill="#fbbf24" />
-
           <g class="lid-group">
             <rect x="38" y="60" width="124" height="30" rx="6" fill="#dc2626" />
             <rect x="88" y="60" width="24" height="30" fill="#fbbf24" />
@@ -210,6 +222,11 @@
       <div class="my-4 p-5 rounded-2xl bg-slate-950 border border-amber-500/30 shadow-inner">
         <div id="recipientName" class="text-3xl font-black text-amber-400 tracking-wide"></div>
         <div id="budgetCapsule" class="inline-block mt-2 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full text-xs text-amber-300 font-semibold"></div>
+        
+        <div id="recipientWishlist" class="hidden mt-3 pt-3 border-t border-slate-800 text-xs text-slate-300 italic">
+          <span class="font-normal text-slate-500 not-italic block mb-0.5">💡 Sugestia prezentowa:</span>
+          <span id="wishlistText" class="text-amber-200"></span>
+        </div>
       </div>
       
       <p class="text-xs text-slate-400 mb-5 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
@@ -223,7 +240,7 @@
 
   </main>
 
-  <!-- PASKIEM NAWIGACJI NA DOLE (NAVBAR MENU) -->
+  <!-- NAV BAR -->
   <nav class="w-full max-w-md mt-4 bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-800 p-1.5 flex gap-2 z-20">
     <button id="navDrawBtn" onclick="switchToTab('draw')" class="flex-1 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-red-600 text-white shadow-md">
       <span>🎲</span> Losowanie
@@ -234,6 +251,14 @@
   </nav>
 
   <script>
+    // Motywy
+    function setTheme(theme) {
+      document.body.className = `theme-${theme} min-h-screen flex flex-col justify-between p-4 text-slate-100 max-w-md mx-auto`;
+      localStorage.setItem('santa_theme', theme);
+    }
+    const savedTheme = localStorage.getItem('santa_theme') || 'red';
+    setTheme(savedTheme);
+
     // Śnieg
     const snowContainer = document.getElementById('snowContainer');
     for (let i = 0; i < 20; i++) {
@@ -268,47 +293,60 @@
     }
 
     let setupParticipants = [];
-    let state = {
-      id: null,
-      title: '',
-      budget: '',
-      names: [],
-      pairs: {},
-      pins: {},
-      drawn: []
-    };
+    let state = { id: null, title: '', budget: '', names: [], pairs: {}, pins: {}, wishlists: {}, drawn: [] };
     let history = [];
 
-    document.getElementById('nameInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') addParticipant();
-    });
+    document.getElementById('nameInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') addParticipant(); });
 
     window.onload = () => {
-      const savedState = localStorage.getItem('santa_current_v5');
-      const savedHistory = localStorage.getItem('santa_history_v5');
-
+      const savedState = localStorage.getItem('santa_current_v7');
+      const savedHistory = localStorage.getItem('santa_history_v7');
       if (savedHistory) history = JSON.parse(savedHistory);
-      if (savedState) {
-        state = JSON.parse(savedState);
-        showDrawView();
-      } else {
-        showSetupView();
-      }
+      if (savedState) { state = JSON.parse(savedState); showDrawView(); } else { showSetupView(); }
     };
 
     function saveState() {
-      localStorage.setItem('santa_current_v5', JSON.stringify(state));
-      
-      // Aktualizuj losowanie w historii, jeśli istnieje
+      localStorage.setItem('santa_current_v7', JSON.stringify(state));
       if (state.id) {
         const idx = history.findIndex(h => h.id === state.id);
-        if (idx !== -1) {
-          history[idx] = { ...state };
-        } else {
-          history.unshift({ ...state });
-        }
-        localStorage.setItem('santa_history_v5', JSON.stringify(history));
+        if (idx !== -1) history[idx] = { ...state };
+        else history.unshift({ ...state });
+        localStorage.setItem('santa_history_v7', JSON.stringify(history));
       }
+    }
+
+    // EKSPORT I IMPORT PLIKU JSON
+    function exportBackup() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(history));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `tajny_mikolaj_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (Array.isArray(imported)) {
+            history = imported;
+            localStorage.setItem('santa_history_v7', JSON.stringify(history));
+            alert('Kopia zapasowa została pomyślnie wczytana!');
+            showHistoryView();
+          } else {
+            alert('Nieprawidłowy plik kopii zapasowej!');
+          }
+        } catch (err) {
+          alert('Błąd podczas odczytu pliku kopii zapasowej!');
+        }
+      };
+      reader.readAsText(file);
     }
 
     function addParticipant() {
@@ -334,15 +372,13 @@
       const list = document.getElementById('participantsList');
       document.getElementById('participantCount').textContent = `${setupParticipants.length} osób`;
       list.innerHTML = '';
-
       if (setupParticipants.length === 0) {
-        list.innerHTML = `<div class="text-center py-5 text-xs text-slate-600">Brak osób na liście. Wpisz imię powyżej.</div>`;
+        list.innerHTML = `<div class="text-center py-4 text-xs text-slate-600">Brak osób na liście. Wpisz imię powyżej.</div>`;
         return;
       }
-
       setupParticipants.forEach((name, i) => {
         const item = document.createElement('div');
-        item.className = 'flex justify-between items-center bg-slate-900 border border-slate-800/80 px-3.5 py-2 rounded-xl text-sm font-medium';
+        item.className = 'flex justify-between items-center bg-slate-900 border border-slate-800/80 px-3 py-1.5 rounded-xl text-sm font-medium';
         item.innerHTML = `
           <span class="text-slate-200">${name}</span>
           <button onclick="removeParticipant(${i})" class="text-slate-500 hover:text-red-400 p-1 transition-colors text-xs">✕</button>
@@ -377,12 +413,10 @@
       state.names = names;
       state.pairs = {};
       state.pins = {};
+      state.wishlists = {};
       state.drawn = [];
 
-      names.forEach((giver, index) => {
-        state.pairs[giver] = receivers[index];
-      });
-
+      names.forEach((giver, index) => { state.pairs[giver] = receivers[index]; });
       saveState();
       showDrawView();
     }
@@ -396,15 +430,10 @@
       document.getElementById('resultView').classList.add('hidden');
     }
 
-    function showSetupView() {
-      hideAllViews();
-      document.getElementById('setupView').classList.remove('hidden');
-    }
-
+    function showSetupView() { hideAllViews(); document.getElementById('setupView').classList.remove('hidden'); }
     function showDrawView() {
       hideAllViews();
       document.getElementById('drawView').classList.remove('hidden');
-
       document.getElementById('currentDrawTitle').textContent = state.title;
       document.getElementById('progressStatus').textContent = `Wylosowano ${state.drawn.length} z ${state.names.length} osób`;
 
@@ -415,11 +444,8 @@
         const isDrawn = state.drawn.includes(name);
         const btn = document.createElement('button');
         btn.className = `w-full p-4 rounded-xl font-semibold text-left flex justify-between items-center transition-all ${
-          isDrawn 
-            ? 'bg-slate-950/60 text-slate-300 border border-slate-800' 
-            : 'bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-white active:scale-98 shadow-sm'
+          isDrawn ? 'bg-slate-950/60 text-slate-300 border border-slate-800' : 'bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-white active:scale-98 shadow-sm'
         }`;
-        
         btn.innerHTML = `
           <span class="text-sm font-bold">${name}</span>
           <span class="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 ${
@@ -428,7 +454,6 @@
             ${isDrawn ? '🔒 Przypomnij (PIN)' : 'Otwórz 🎁'}
           </span>
         `;
-
         btn.onclick = () => askConfirmation(name);
         listContainer.appendChild(btn);
       });
@@ -437,12 +462,11 @@
     function showHistoryView() {
       hideAllViews();
       document.getElementById('historyView').classList.remove('hidden');
-
       const container = document.getElementById('historyList');
       container.innerHTML = '';
 
       if (history.length === 0) {
-        container.innerHTML = `<div class="text-center py-10 text-xs text-slate-600">Brak zapisanych losowań w historii.</div>`;
+        container.innerHTML = `<div class="text-center py-8 text-xs text-slate-600">Brak zapisanych losowań w historii.</div>`;
         return;
       }
 
@@ -466,19 +490,16 @@
       const found = history.find(h => h.id === id);
       if (found) {
         state = { ...found };
-        localStorage.setItem('santa_current_v5', JSON.stringify(state));
+        localStorage.setItem('santa_current_v7', JSON.stringify(state));
         switchToTab('draw');
       }
     }
 
-    function archiveCurrentDraw() {
-      alert('Losowanie zostało zapisane w zakładce "Historia"!');
-    }
+    function archiveCurrentDraw() { alert('Losowanie zostało zapisane w zakładce "Historia"!'); }
 
     function switchToTab(tab) {
       const drawBtn = document.getElementById('navDrawBtn');
       const historyBtn = document.getElementById('navHistoryBtn');
-
       if (tab === 'draw') {
         drawBtn.className = "flex-1 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-red-600 text-white shadow-md";
         historyBtn.className = "flex-1 py-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all text-slate-400 hover:text-white";
@@ -496,12 +517,18 @@
       currentGiver = name;
       document.getElementById('confirmName').textContent = name;
       const pinInput = document.getElementById('pinInput');
+      const wishlistInput = document.getElementById('wishlistInput');
       pinInput.value = '';
 
       const isDrawn = state.drawn.includes(name);
-      document.getElementById('pinInstruction').textContent = isDrawn 
-        ? "Wpisz swój 4-cyfrowy PIN, aby przypomnieć wynik:" 
-        : "Ustal 4-cyfrowy PIN, aby zabezpieczyć swój wybór:";
+      document.getElementById('pinInstruction').textContent = isDrawn ? "Wpisz swój 4-cyfrowy PIN, aby przypomnieć wynik:" : "Ustal 4-cyfrowy PIN, aby zabezpieczyć swój wybór:";
+
+      if (isDrawn) {
+        document.getElementById('wishlistSection').classList.add('hidden');
+      } else {
+        document.getElementById('wishlistSection').classList.remove('hidden');
+        wishlistInput.value = state.wishlists[name] || '';
+      }
 
       hideAllViews();
       document.getElementById('confirmView').classList.remove('hidden');
@@ -510,13 +537,12 @@
 
     function handlePinSubmit() {
       const pin = document.getElementById('pinInput').value.trim();
+      const wishlist = document.getElementById('wishlistInput').value.trim();
       if (pin.length !== 4 || isNaN(pin)) {
         alert('PIN musi składać się dokładnie z 4 cyfr!');
         return;
       }
-
       const isDrawn = state.drawn.includes(currentGiver);
-
       if (isDrawn) {
         if (state.pins[currentGiver] !== pin) {
           alert('Niepoprawny PIN!');
@@ -525,6 +551,7 @@
         showResultScreen();
       } else {
         state.pins[currentGiver] = pin;
+        if (wishlist) state.wishlists[currentGiver] = wishlist;
         showGiftScreen();
       }
     }
@@ -538,19 +565,10 @@
     function openGift() {
       const wrapper = document.getElementById('giftWrapper');
       if (wrapper.classList.contains('open')) return;
-
       wrapper.classList.add('open');
       playJingle();
-
       if (navigator.vibrate) navigator.vibrate([80, 40, 80]);
-
-      confetti({
-        particleCount: 90,
-        spread: 80,
-        origin: { y: 0.6 },
-        colors: ['#fbbf24', '#dc2626', '#ffffff', '#10b981']
-      });
-
+      confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 }, colors: ['#fbbf24', '#dc2626', '#ffffff', '#10b981'] });
       setTimeout(() => {
         if (!state.drawn.includes(currentGiver)) {
           state.drawn.push(currentGiver);
@@ -572,6 +590,17 @@
         budgetCapsule.classList.add('hidden');
       }
 
+      const recipientWishlist = state.wishlists[recipient];
+      const wishlistBlock = document.getElementById('recipientWishlist');
+      const wishlistText = document.getElementById('wishlistText');
+
+      if (recipientWishlist) {
+        wishlistText.textContent = `"${recipientWishlist}"`;
+        wishlistBlock.classList.remove('hidden');
+      } else {
+        wishlistBlock.classList.add('hidden');
+      }
+
       hideAllViews();
       document.getElementById('resultView').classList.remove('hidden');
     }
@@ -584,8 +613,8 @@
     function confirmReset() {
       const code = prompt('Aby utworzyć nowe losowanie, wpisz "RESET":');
       if (code && code.toUpperCase() === 'RESET') {
-        localStorage.removeItem('santa_current_v5');
-        state = { id: null, title: '', budget: '', names: [], pairs: {}, pins: {}, drawn: [] };
+        localStorage.removeItem('santa_current_v7');
+        state = { id: null, title: '', budget: '', names: [], pairs: {}, pins: {}, wishlists: {}, drawn: [] };
         setupParticipants = [];
         renderSetupList();
         showSetupView();
