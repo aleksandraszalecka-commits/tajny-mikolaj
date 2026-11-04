@@ -79,10 +79,10 @@
     <!-- EKRAN 1: DODAWANIE UCZESTNIKÓW -->
     <div id="setupView">
       <div class="text-center mb-6">
-        <!-- CZYSTA, NATIVE IKONA CHOINKI/PREZENTU -->
+        <!-- ZASTĄPIENIE CHOINKI DOPRACOWANYM PREZENTEM W CZERWONYM KAFELKU -->
         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-700 to-red-900 border border-red-500/40 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-red-950/60">
           <svg class="w-9 h-9 text-amber-300" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2L8.5 7h2L7 11h2.5L6 16h12l-3.5-5H17l-3.5-4h2L12 2zM10.5 17h3v4h-3v-4z"/>
+            <path d="M20 6h-3.12B3.984 3.984 0 0 0 17 4.5C17 3.12 15.88 2 14.5 2c-1.19 0-2.18.83-2.43 1.95A4.004 4.004 0 0 0 9.5 2C8.12 2 7 3.12 7 4.5C7 5.06 7.19 5.57 7.5 6H4c-1.11 0-2 .89-2 2v3c0 .55.45 1 1 1h1v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h1c.55 0 1-.45 1-1V8c0-1.11-.89-2-2-2zm-5.5-2c.83 0 1.5.67 1.5 1.5S15.33 7 14.5 7S13 6.33 13 5.5S13.67 4 14.5 4zM9.5 4c.83 0 1.5.67 1.5 1.5S10.33 7 9.5 7S8 6.33 8 5.5S8.67 4 9.5 4zM11 20H6V12h5v8zm0-10H4V8h7v2zm7 10h-5V12h5v8zm2-10h-7V8h7v2z"/>
           </svg>
         </div>
         <h1 class="text-2xl font-black tracking-tight text-white">Tajny Mikołaj</h1>
@@ -266,11 +266,11 @@
 
   </main>
 
-  <!-- NAVBAR Z CZYSZCZONYMI IKONAMI -->
+  <!-- NAVBAR Z CZYSZCZONYM PREZENTEM W PRZYCISKU -->
   <nav class="w-full max-w-md mt-4 mb-2 bg-emerald-950/80 backdrop-blur-xl rounded-2xl border border-emerald-800/60 p-1.5 flex gap-2 z-20">
     <button id="navDrawBtn" onclick="switchToTab('draw')" class="flex-1 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-red-700 text-white shadow-md">
       <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 2L8.5 7h2L7 11h2.5L6 16h12l-3.5-5H17l-3.5-4h2L12 2zM10.5 17h3v4h-3v-4z"/>
+        <path d="M20 6h-3.12B3.984 3.984 0 0 0 17 4.5C17 3.12 15.88 2 14.5 2c-1.19 0-2.18.83-2.43 1.95A4.004 4.004 0 0 0 9.5 2C8.12 2 7 3.12 7 4.5C7 5.06 7.19 5.57 7.5 6H4c-1.11 0-2 .89-2 2v3c0 .55.45 1 1 1h1v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h1c.55 0 1-.45 1-1V8c0-1.11-.89-2-2-2zm-5.5-2c.83 0 1.5.67 1.5 1.5S15.33 7 14.5 7S13 6.33 13 5.5S13.67 4 14.5 4zM9.5 4c.83 0 1.5.67 1.5 1.5S10.33 7 9.5 7S8 6.33 8 5.5S8.67 4 9.5 4zM11 20H6V12h5v8zm0-10H4V8h7v2zm7 10h-5V12h5v8zm2-10h-7V8h7v2z"/>
       </svg>
       Losowanie
     </button>
@@ -332,9 +332,9 @@
     });
 
     window.onload = () => {
-      // ZMIENIONY KLUCZ PAMIĘCI (V30) ABY WYMUSIĆ ODŚWIEŻENIE PRZEGLĄDARKI
-      const savedState = localStorage.getItem('santa_ios_v30');
-      const savedHistory = localStorage.getItem('santa_history_v30');
+      // KLUCZ V40 ABY OMIJAĆ PAMIĘĆ PO PODMIANIE IKON
+      const savedState = localStorage.getItem('santa_ios_v40');
+      const savedHistory = localStorage.getItem('santa_history_v40');
 
       if (savedHistory) history = JSON.parse(savedHistory);
       if (savedState) {
@@ -346,12 +346,12 @@
     };
 
     function saveState() {
-      localStorage.setItem('santa_ios_v30', JSON.stringify(state));
+      localStorage.setItem('santa_ios_v40', JSON.stringify(state));
       if (state.id) {
         const idx = history.findIndex(h => h.id === state.id);
         if (idx !== -1) history[idx] = { ...state };
         else history.unshift({ ...state });
-        localStorage.setItem('santa_history_v30', JSON.stringify(history));
+        localStorage.setItem('santa_history_v40', JSON.stringify(history));
       }
     }
 
@@ -530,7 +530,7 @@
       const found = history.find(h => h.id === id);
       if (found) {
         state = { ...found };
-        localStorage.setItem('santa_ios_v30', JSON.stringify(state));
+        localStorage.setItem('santa_ios_v40', JSON.stringify(state));
         switchToTab('draw');
       }
     }
@@ -679,7 +679,7 @@
     function confirmReset() {
       const code = prompt('Aby utworzyć nowe losowanie, wpisz "RESET":');
       if (code && code.toUpperCase() === 'RESET') {
-        localStorage.removeItem('santa_ios_v30');
+        localStorage.removeItem('santa_ios_v40');
         state = { id: null, title: '', budget: '', names: [], pairs: {}, pins: {}, wishlists: {}, drawn: [] };
         setupParticipants = [];
         renderSetupList();
