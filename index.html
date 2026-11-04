@@ -8,9 +8,8 @@
   <meta name="apple-mobile-web-app-title" content="Tajny Mikołaj">
   <title>Tajny Mikołaj 🎄</title>
 
-  <!-- IKONA APLIKACJI NA EKRAN GŁÓWNY (PREZENT) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='120' fill='%23800f1c'/><rect x='224' y='180' width='64' height='268' fill='%23fbbf24'/><rect x='64' y='240' width='384' height='208' rx='24' fill='%23991b1b'/><rect x='224' y='240' width='64' height='208' fill='%23fbbf24'/><rect x='48' y='180' width='416' height='72' rx='16' fill='%23b91c1c'/><rect x='224' y='180' width='64' height='72' fill='%23f59e0b'/><path d='M256 180c-40-60-120-60-120 0s80 60 120 0z' fill='%23f59e0b'/><path d='M256 180c40-60 120-60 120 0s-80 60-120 0z' fill='%23f59e0b'/><circle cx='256' cy='180' r='24' fill='%23fbbf24'/></svg>">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='120' fill='%23800f1c'/><rect x='224' y='180' width='64' height='268' fill='%23fbbf24'/><rect x='64' y='240' width='384' height='208' rx='24' fill='%23991b1b'/><rect x='224' y='240' width='64' height='208' fill='%23fbbf24'/><rect x='48' y='180' width='416' height='72' rx='16' fill='%23b91c1c'/><rect x='224' y='180' width='64' height='72' fill='%23f59e0b'/><path d='M256 180c-40-60-120-60-120 0s80 60 120 0z' fill='%23f59e0b'/><path d='M256 180c40-60 120-60 120 0s-80 60-120 0z' fill='%23f59e0b'/><circle cx='256' cy='180' r='24' fill='%23fbbf24'/></svg>">
+  <!-- WIRTUALNY MANIFEST PWA DLA SAFARI I ANDROIDA (DLA GWARANTOWANEJ IKONY) -->
+  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIlRham55IE1pa29sYWoiLAogICJzaG9ydF9uYW1lIjogIlRham55IE1pa29sYWoiLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNTEyMGMiLAogICJ0aGVtZV9jb2xvciI6ICIjMDUxMjBjIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgNTEyIDUxMic+PHJlY3Qgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInIHJ4PScxMjAnIGZpbGw9JyUyMzgwMGYxYycvPjxyZWN0IHg9JzIyNCcgeT0nMTgwJyB3aWR0aD0nNjQnIGhlaWdodD0nMjY4JyBmaWxsPSclMjNmYmJmMjQnLz48cmVjdCB4PSc2NCcgeT0nMjQwJyB3aWR0aD0nMzg0JyBoZWlnaHQ9JzIwOCcgcng9JzI0JyBmaWxsPSclMjM5OTFiMWInLz48cmVjdCB4PScyMjQnIHk9JzI0MCcgd2lkdGg9JzY0JyBoZWlnaHQ9JzIwOCcgZmlsbD0nJTIzZmJiZjI0Jy8+PHJlY3QgeD0nNDgnIHk9JzE4MCcgd2lkdGg9JzQxNicgaGVpZ2h0PTc3Micgcng9JzE2JyBmaWxsPSclMjNiOTFjMWMnLz48cmVjdCB4PScyMjQnIHk9JzE4MCcgd2lkdGg9JzY0JyBoZWlnaHQ9JzcyJyBmaWxsPSclMjNmNTllMGInLz48cGF0aCBkPSdNMjU2IDE4MGMtNDAtNjAtMTIwLTYwLTEyMCAwczgwIDYwIDEyMCAweicgZmlsbD0nJTIzZjU5ZTBiJy8+PHBhdGggZD0nTTI1NiAxODBjNDAtNjAtMTIwLTYwIDEyMCAwcy04MCA2MC0xMjAgMHonIGZpbGw9JyUyM2Y1OWUwYicvPjxjaXJjbGUgY3g9JzI1NicgY3k9JzE4MCcgcj0nMjQnIGZpbGw9JyUyM2ZiYmYyNCcvPjwvc3ZnPikiLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiLAogICAgICAicHVycG9zZSI6ICJhbHkgbWFza2FibGUiCiAgICB9CiAgXQp9">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -326,8 +325,8 @@
     });
 
     window.onload = () => {
-      const savedState = localStorage.getItem('santa_icon_v60');
-      const savedHistory = localStorage.getItem('santa_history_v60');
+      const savedState = localStorage.getItem('santa_pwa_v70');
+      const savedHistory = localStorage.getItem('santa_history_v70');
 
       if (savedHistory) history = JSON.parse(savedHistory);
       if (savedState) {
@@ -339,12 +338,12 @@
     };
 
     function saveState() {
-      localStorage.setItem('santa_icon_v60', JSON.stringify(state));
+      localStorage.setItem('santa_pwa_v70', JSON.stringify(state));
       if (state.id) {
         const idx = history.findIndex(h => h.id === state.id);
         if (idx !== -1) history[idx] = { ...state };
         else history.unshift({ ...state });
-        localStorage.setItem('santa_history_v60', JSON.stringify(history));
+        localStorage.setItem('santa_history_v70', JSON.stringify(history));
       }
     }
 
@@ -523,7 +522,7 @@
       const found = history.find(h => h.id === id);
       if (found) {
         state = { ...found };
-        localStorage.setItem('santa_icon_v60', JSON.stringify(state));
+        localStorage.setItem('santa_pwa_v70', JSON.stringify(state));
         switchToTab('draw');
       }
     }
@@ -672,7 +671,7 @@
     function confirmReset() {
       const code = prompt('Aby utworzyć nowe losowanie, wpisz "RESET":');
       if (code && code.toUpperCase() === 'RESET') {
-        localStorage.removeItem('santa_icon_v60');
+        localStorage.removeItem('santa_pwa_v70');
         state = { id: null, title: '', budget: '', names: [], pairs: {}, pins: {}, wishlists: {}, drawn: [] };
         setupParticipants = [];
         renderSetupList();
