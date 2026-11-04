@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Świąteczny Tajny Mikołaj 🎄</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+  <!-- TŁO ŚWIĄTECZNE -->
+  <div class="fixed inset-0 pointer-events-none opacity-20">
+    <div class="absolute -top-10 -left-10 w-72 h-72 bg-red-600 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-10 -right-10 w-72 h-72 bg-emerald-600 rounded-full blur-3xl"></div>
+  </div>
+
+  <main class="w-full max-w-md bg-slate-800/80 backdrop-blur-md rounded-3xl p-6 border border-slate-700 shadow-2xl z-10">
+    
+    <!-- EKRAN 1: SETUP (Wprowadzanie imion) -->
+    <div id="setupView">
+      <div class="text-center mb-6">
+        <span class="text-5xl">🎁</span>
+        <h1 class="text-2xl font-extrabold text-red-500 mt-2">Tajny Mikołaj</h1>
+        <p class="text-slate-400 text-sm">Wpisz uczestników i rozpocznij losowanie na tym telefonie.</p>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Lista uczestników (każdy w nowej linii)</label>
+          <textarea id="namesInput" rows="5" placeholder="Anna&#10;Piotr&#10;Kasia&#10;Tomek" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-red-500 transition-colors"></textarea>
+        </div>
+        <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-600 to-emerald-600 hover:from-red-500 hover:to-emerald-500 font-bold py-3.5 rounded-xl shadow-lg transition-transform active:scale-95">
+          🎲 Wylosuj pary i rozpocznij
+        </button>
+      </div>
+    </div>
+
+    <!-- EKRAN 2: LISTA OSOB DO LOSOWANIA -->
+    <div id="drawView" class="hidden">
+      <div class="text-center mb-6">
+        <span class="text-4xl">🎅</span>
+        <h2 class="text-xl font-bold mt-1">Podaj telefon odpowiedniej osobie</h2>
+        <p class="text-slate-400 text-xs mt-1">Kliknij swoje imię, aby zobaczyć kogo obdarowujesz.</p>
+      </div>
+
+      <div id="buttonsList" class="space-y-2.5 max-h-[50vh] overflow-y-auto pr-1"></div>
+
+      <button onclick="resetAll()" class="w-full mt-6 text-xs text-slate-500 hover:text-red-400 underline transition-colors">
+        Resetuj całe losowanie
+      </button>
+    </div>
+
+    <!-- EKRAN 3: POTWIERDZENIE TOŻSAMOŚCI -->
+    <div id="confirmView" class="hidden text-center py-4">
+      <span class="text-5xl">👀</span>
+      <h3 class="text-lg font-bold mt-3">Czy to na pewno Ty?</h3>
+      <p id="confirmName" class="text-2xl font-extrabold text-red-400 my-2"></p>
+      <p class="text-xs text-slate-400 mb-6">Upewnij się, że nikt nie patrzy na ekran!</p>
+      
+      <div class="space-y-3">
+        <button onclick="revealRecipient()" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3 rounded-xl transition-transform active:scale-95">
+          Tak, pokaż kogo wylosowałem/am! 🎁
+        </button>
+        <button onclick="showDrawView()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-300 font-semibold py-2.5 rounded-xl text-sm">
+          Wróć
+        </button>
+      </div>
+    </div>
+
+    <!-- EKRAN 4: WYNIK (WYLOSOWANA OSOBA) -->
+    <div id="resultView" class="hidden text-center py-4">
+      <span class="text-4xl">🎉</span>
+      <p class="text-sm text-slate-400 mt-2">Kupujesz prezent dla:</p>
+      <div id="recipientName" class="text-3xl font-extrabold text-emerald-400 my-4 tracking-wide"></div>
+      
+      <p class="text-xs text-slate-400 mb-6 bg-slate-900/50 p-3 rounded-xl border border-slate-700">
+        🤫 Zachowaj to w tajemnicy! Zrób zrzut ekranu lub zapamiętaj.
+      </p>
+
+      <button onclick="hideResult()" class="w-full bg-red-600 hover:bg-red-500 font-bold py-3.5 rounded-xl shadow-lg transition-transform active:scale-95">
+        🔒 Zasłoń i podaj telefon dalej
+      </button>
+    </div>
+
+  </main>
+
+  <script>
+    let state = {
+      names: [],
+      pairs: {}, // giver -> receiver
+      drawn: []  // givers who have seen their result
+    };
+
+    // Wczytaj dane z localStorage po otwarciu
+    window.onload = () => {
+      const savedState = localStorage.getItem('santa_state');
+      if (savedState) {
+        state = JSON.parse(savedState);
+        showDrawView();
+      }
+    };
+
+    function saveState() {
+      localStorage.setItem('santa_state', JSON.stringify(state));
+    }
+
+    function startDraw() {
+      const input = document.getElementById('namesInput').value;
+      const names = input.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+
+      if (names.length < 3) {
+        alert('Wpisz co najmniej 3 osoby!');
+        return;
+      }
+
+      // Algorytm deranżacji (nikt nie losuje siebie)
+      let receivers = [...names];
+      let valid = false;
+
+      while (!valid) {
+        // Shuffle
+        for (let i = receivers.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [receivers[i], receivers[j]] = [receivers[j], receivers[i]];
+        }
+        valid = names.every((giver, index) => giver !== receivers[index]);
+      }
+
+      state.names = names;
+      state.pairs = {};
+      state.drawn = [];
+
+      names.forEach((giver, index) => {
+        state.pairs[giver] = receivers[index];
+      });
+
+      saveState();
+      showDrawView();
+    }
+
+    function showDrawView() {
+      document.getElementById('setupView').classList.add('hidden');
+      document.getElementById('confirmView').classList.add('hidden');
+      document.getElementById('resultView').classList.add('hidden');
+      document.getElementById('drawView').classList.remove('hidden');
+
+      const listContainer = document.getElementById('buttonsList');
+      listContainer.innerHTML = '';
+
+      state.names.forEach(name => {
+        const isDrawn = state.drawn.includes(name);
+        const btn = document.createElement('button');
+        btn.className = `w-full p-4 rounded-xl font-bold text-left flex justify-between items-center transition-all ${
+          isDrawn 
+            ? 'bg-slate-900/50 text-slate-500 border border-slate-800 cursor-not-allowed' 
+            : 'bg-slate-700/60 hover:bg-slate-700 border border-slate-600 text-white active:scale-98'
+        }`;
+        
+        btn.innerHTML = `
+          <span>${name}</span>
+          <span class="text-xs ${isDrawn ? 'text-slate-600' : 'text-emerald-400'}">
+            ${isDrawn ? '✅ Wylosowane' : 'Otwórz 🎁'}
+          </span>
+        `;
+
+        if (!isDrawn) {
+          btn.onclick = () => askConfirmation(name);
+        }
+
+        listContainer.appendChild(btn);
+      });
+    }
+
+    let currentGiver = '';
+
+    function askConfirmation(name) {
+      currentGiver = name;
+      document.getElementById('confirmName').textContent = name;
+      document.getElementById('drawView').classList.add('hidden');
+      document.getElementById('confirmView').classList.remove('hidden');
+    }
+
+    function revealRecipient() {
+      const recipient = state.pairs[currentGiver];
+      document.getElementById('recipientName').textContent = recipient;
+      
+      document.getElementById('confirmView').classList.add('hidden');
+      document.getElementById('resultView').classList.remove('hidden');
+
+      confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+
+      if (!state.drawn.includes(currentGiver)) {
+        state.drawn.push(currentGiver);
+        saveState();
+      }
+    }
+
+    function hideResult() {
+      currentGiver = '';
+      showDrawView();
+    }
+
+    function resetAll() {
+      if (confirm('Czy na pewno chcesz usunąć całe losowanie i zacząć od nowa?')) {
+        localStorage.removeItem('santa_state');
+        state = { names: [], pairs: {}, drawn: [] };
+        document.getElementById('drawView').classList.add('hidden');
+        document.getElementById('setupView').classList.remove('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
