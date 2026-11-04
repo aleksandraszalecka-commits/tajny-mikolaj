@@ -12,16 +12,15 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #05120c;
       background-image: 
-        radial-gradient(circle at 50% -10%, rgba(153, 27, 27, 0.4) 0%, transparent 60%),
-        radial-gradient(circle at 90% 100%, rgba(6, 78, 59, 0.5) 0%, transparent 60%);
+        radial-gradient(circle at 50% -10%, rgba(153, 27, 27, 0.45) 0%, transparent 60%),
+        radial-gradient(circle at 90% 100%, rgba(6, 78, 59, 0.55) 0%, transparent 60%);
       background-attachment: fixed;
     }
 
-    /* Śnieg w tle */
     .snowflake {
       position: fixed;
       top: -10px;
-      color: rgba(255, 255, 255, 0.25);
+      color: rgba(255, 255, 255, 0.2);
       user-select: none;
       pointer-events: none;
       z-index: 1;
@@ -31,22 +30,19 @@
       to { transform: translateY(105vh) rotate(360deg); }
     }
 
-    /* Karta w stylu Google Material You / App Store */
     .m3-card {
-      background: rgba(18, 30, 23, 0.85);
+      background: rgba(18, 30, 23, 0.88);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(153, 27, 27, 0.2);
     }
 
-    /* Złota i bordowa akcentowa karta */
     .burgundy-card {
       background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
-      border: 1px solid rgba(248, 113, 113, 0.2);
+      border: 1px solid rgba(248, 113, 113, 0.25);
     }
 
-    /* Prezent SVG 3D */
     .gift-container { perspective: 1000px; cursor: pointer; }
     .gift-svg { transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .gift-container:hover .gift-svg { transform: scale(1.05); }
@@ -61,13 +57,22 @@
     }
     .glow-effect { opacity: 0; transition: opacity 0.5s ease 0.2s; }
     .gift-container.open .glow-effect { opacity: 1; }
+
+    /* Animacja odliczania */
+    @keyframes pulseScale {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.8; }
+    }
+    .countdown-anim {
+      animation: pulseScale 0.8s ease-in-out infinite;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between p-4 text-slate-100 max-w-md mx-auto relative">
 
   <div id="snowContainer"></div>
 
-  <!-- CONTAINER MAIN -->
+  <!-- KARTA GŁÓWNA -->
   <main class="w-full m3-card rounded-[32px] p-6 z-10 my-auto relative overflow-hidden">
     
     <!-- EKRAN 1: DODAWANIE UCZESTNIKÓW -->
@@ -79,7 +84,7 @@
           </svg>
         </div>
         <h1 class="text-2xl font-black tracking-tight text-white">Tajny Mikołaj</h1>
-        <p class="text-emerald-400/80 text-xs mt-1 font-semibold">Skonfiguruj listę i przekaż telefon</p>
+        <p class="text-emerald-400/80 text-xs mt-1 font-semibold">Wpisz swoje imię oraz pomysł na prezent</p>
       </div>
 
       <div class="space-y-4">
@@ -89,19 +94,19 @@
         </div>
 
         <div class="p-4 bg-emerald-950/30 border border-emerald-800/40 rounded-2xl space-y-2.5">
-          <label class="block text-[11px] font-extrabold text-slate-300 uppercase tracking-wider">Dodaj osobę do losowania</label>
-          <input type="text" id="nameInput" placeholder="Imię uczestnika" class="w-full bg-emerald-950/80 border border-emerald-800/80 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-red-500">
-          <input type="text" id="wishInput" placeholder="Co ta osoba chciałaby dostać? (opcjonalnie)" class="w-full bg-emerald-950/80 border border-emerald-800/80 rounded-xl px-4 py-2.5 text-amber-300/90 text-xs focus:outline-none focus:border-amber-400">
+          <label class="block text-[11px] font-extrabold text-slate-300 uppercase tracking-wider">Dodaj się do losowania</label>
+          <input type="text" id="nameInput" placeholder="Twoje imię" class="w-full bg-emerald-950/80 border border-emerald-800/80 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-red-500">
+          <input type="text" id="wishInput" placeholder="Co chciałbyś dostać? (opcjonalnie)" class="w-full bg-emerald-950/80 border border-emerald-800/80 rounded-xl px-4 py-2.5 text-amber-300/90 text-xs focus:outline-none focus:border-amber-400">
           
           <button onclick="addParticipant()" class="w-full bg-emerald-900/80 hover:bg-emerald-800 active:scale-98 text-emerald-100 font-bold py-2.5 rounded-xl transition-all text-xs border border-emerald-700/60 flex items-center justify-center gap-2">
             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-            Dodaj Uczestnika
+            Dodaj do listy
           </button>
         </div>
 
         <div>
           <div class="flex justify-between items-center mb-2">
-            <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Uczestnicy</span>
+            <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Dołączone osoby</span>
             <span id="participantCount" class="text-xs font-bold px-3 py-0.5 bg-emerald-950 rounded-full text-emerald-300 border border-emerald-800">0 osób</span>
           </div>
           
@@ -109,25 +114,37 @@
         </div>
 
         <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-700 to-red-800 hover:from-red-600 hover:to-red-700 text-white font-extrabold py-4 rounded-2xl shadow-lg shadow-red-950/60 transition-all active:scale-95 text-sm flex items-center justify-center gap-2 mt-2 border border-red-500/30">
-          <span>🎲</span> Rozpocznij Losowanie
+          <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L5.605 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+          Rozpocznij Losowanie
         </button>
       </div>
     </div>
 
-    <!-- EKRAN 2: LISTA PRZEKAZYWANIA TELEFONU -->
+    <!-- EKRAN 2: LISTA OSOB + PASEK POSTĘPU NA ŻYWO -->
     <div id="drawView" class="hidden">
-      <div class="text-center mb-6">
+      <div class="text-center mb-4">
         <div class="w-12 h-12 bg-red-950/60 border border-red-700/40 rounded-2xl flex items-center justify-center mx-auto mb-2">
           <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
         </div>
-        <h2 id="currentDrawTitle" class="text-xl font-extrabold text-white">Podaj telefon</h2>
-        <p id="progressStatus" class="text-emerald-400/80 text-xs mt-1">Kliknij swoje imię z listy poniżej</p>
+        <h2 id="currentDrawTitle" class="text-xl font-extrabold text-white">Podaj telefon dalej</h2>
+        <p class="text-emerald-400/80 text-xs mt-0.5">Kliknij swoje imię z listy poniżej</p>
       </div>
 
-      <div id="buttonsList" class="space-y-2.5 max-h-[45vh] overflow-y-auto pr-1"></div>
+      <!-- PASEK POSTĘPU NA ŻYWO -->
+      <div class="mb-5 bg-emerald-950/60 p-3 rounded-2xl border border-emerald-800/60">
+        <div class="flex justify-between text-xs font-bold mb-1.5">
+          <span class="text-slate-300">Postęp losowania:</span>
+          <span id="progressText" class="text-amber-400">0 z 0</span>
+        </div>
+        <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-emerald-900/40">
+          <div id="progressBar" class="bg-gradient-to-r from-amber-500 to-emerald-500 h-full w-0 transition-all duration-500 rounded-full"></div>
+        </div>
+      </div>
+
+      <div id="buttonsList" class="space-y-2.5 max-h-[40vh] overflow-y-auto pr-1"></div>
 
       <div class="mt-6 pt-4 border-t border-emerald-950/80 flex justify-between items-center">
-        <button onclick="archiveCurrentDraw()" class="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold">
+        <button onclick="archiveCurrentDraw()" class="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1.5 font-semibold">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
           Zapisz w Historii
         </button>
@@ -137,7 +154,7 @@
       </div>
     </div>
 
-    <!-- EKRAN 3: HISTORIA LOSOWAŃ -->
+    <!-- EKRAN 3: HISTORIA -->
     <div id="historyView" class="hidden">
       <div class="text-center mb-6">
         <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
@@ -150,7 +167,7 @@
       <div id="historyList" class="space-y-3 max-h-[50vh] overflow-y-auto pr-1"></div>
     </div>
 
-    <!-- EKRAN 4: POTWIERDZENIE I KOD PIN -->
+    <!-- EKRAN 4: PIN -->
     <div id="confirmView" class="hidden text-center py-3">
       <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
         <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
@@ -164,13 +181,21 @@
       </div>
       
       <div class="space-y-2">
-        <button onclick="handlePinSubmit()" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-extrabold py-3.5 rounded-xl transition-all active:scale-95 text-sm shadow-lg shadow-emerald-950/50">
-          Zatwierdź PIN 🔑
+        <button onclick="handlePinSubmit()" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-extrabold py-3.5 rounded-xl transition-all active:scale-95 text-sm shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+          Zatwierdź PIN
         </button>
         <button onclick="showDrawView()" class="w-full bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold py-2.5 rounded-xl text-xs border border-slate-800">
           Anuluj
         </button>
       </div>
+    </div>
+
+    <!-- EKRAN ODLIECZENIA 3... 2... 1... (REVEAL EFFECT) -->
+    <div id="countdownView" class="hidden text-center py-12">
+      <p class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-4">Zasłoń ekran przed innymi!</p>
+      <div id="countdownNumber" class="text-7xl font-black text-amber-400 countdown-anim my-4">3</div>
+      <p class="text-xs text-slate-400 mt-2">Przygotuj się na otwarcie prezentu...</p>
     </div>
 
     <!-- EKRAN 5: PREZENT 3D -->
@@ -190,19 +215,13 @@
             </filter>
           </defs>
 
-          <!-- Poświata -->
           <circle class="glow-effect" cx="100" cy="110" r="50" fill="#fbbf24" filter="url(#glow)" />
-          
-          <!-- Pudełko spód (Bordo) -->
           <rect x="45" y="85" width="110" height="90" rx="10" fill="#800f1c" />
-          <!-- Wstążka złota -->
           <rect x="88" y="85" width="24" height="90" fill="#fbbf24" />
 
-          <!-- Pokrywka -->
           <g class="lid-group">
             <rect x="38" y="60" width="124" height="30" rx="8" fill="#991b1b" />
             <rect x="88" y="60" width="24" height="30" fill="#fbbf24" />
-            <!-- Kokarda -->
             <path d="M 80 60 C 60 35, 90 25, 98 60 Z" fill="#f59e0b" />
             <path d="M 120 60 C 140 35, 110 25, 102 60 Z" fill="#f59e0b" />
             <circle cx="100" cy="58" r="7" fill="#fbbf24" />
@@ -222,9 +241,12 @@
         <div id="recipientName" class="text-3xl font-black text-amber-300 tracking-wide"></div>
         <div id="budgetCapsule" class="inline-block mt-2 px-3.5 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-xs text-amber-200 font-bold"></div>
         
-        <!-- Podpowiedź prezentowa -->
+        <!-- Sugestia Prezentowa -->
         <div id="recipientWishlist" class="hidden mt-4 pt-3 border-t border-red-900/60 text-xs text-left">
-          <span class="font-bold text-red-200/60 uppercase tracking-wider block mb-1 text-[10px]">💡 Pomysł na prezent:</span>
+          <span class="font-bold text-red-200/70 uppercase tracking-wider flex items-center gap-1.5 mb-1 text-[10px]">
+            <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            Sugestia Prezentowa:
+          </span>
           <span id="wishlistText" class="text-slate-100 font-medium italic bg-black/30 p-2.5 rounded-xl block border border-red-900/40"></span>
         </div>
       </div>
@@ -233,14 +255,14 @@
         🔒 Zapamiętaj swój PIN! Wynik możesz w każdej chwili sprawdzić ponownie w Historii.
       </p>
 
-      <button onclick="hideResult()" class="w-full bg-gradient-to-r from-red-700 to-red-800 hover:from-red-600 hover:to-red-700 text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-red-950/60 transition-all active:scale-95 text-sm border border-red-500/30">
-        🔒 Zamknij i podaj telefon dalej
+      <button onclick="hideResult()" class="w-full bg-gradient-to-r from-red-700 to-red-800 hover:from-red-600 hover:to-red-700 text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-red-950/60 transition-all active:scale-95 text-sm border border-red-500/30 flex items-center justify-center gap-2">
+        <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        Zamknij i podaj telefon dalej
       </button>
     </div>
 
   </main>
 
-  <!-- PASEK NAWIGACYJNY (MATERIAL GOOGLE NAVBAR) -->
   <nav class="w-full max-w-md mt-4 bg-emerald-950/80 backdrop-blur-xl rounded-2xl border border-emerald-800/60 p-1.5 flex gap-2 z-20">
     <button id="navDrawBtn" onclick="switchToTab('draw')" class="flex-1 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-red-700 text-white shadow-md">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -253,7 +275,6 @@
   </nav>
 
   <script>
-    // Śnieg w tle
     const snowContainer = document.getElementById('snowContainer');
     for (let i = 0; i < 18; i++) {
       const flake = document.createElement('div');
@@ -266,7 +287,6 @@
       snowContainer.appendChild(flake);
     }
 
-    // Sound
     function playJingle() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -286,7 +306,7 @@
       } catch (e) {}
     }
 
-    let setupParticipants = []; // { name, wish }
+    let setupParticipants = [];
     let state = {
       id: null,
       title: '',
@@ -304,8 +324,8 @@
     });
 
     window.onload = () => {
-      const savedState = localStorage.getItem('santa_m3_v10');
-      const savedHistory = localStorage.getItem('santa_history_v10');
+      const savedState = localStorage.getItem('santa_final_v12');
+      const savedHistory = localStorage.getItem('santa_history_v12');
 
       if (savedHistory) history = JSON.parse(savedHistory);
       if (savedState) {
@@ -317,12 +337,12 @@
     };
 
     function saveState() {
-      localStorage.setItem('santa_m3_v10', JSON.stringify(state));
+      localStorage.setItem('santa_final_v12', JSON.stringify(state));
       if (state.id) {
         const idx = history.findIndex(h => h.id === state.id);
         if (idx !== -1) history[idx] = { ...state };
         else history.unshift({ ...state });
-        localStorage.setItem('santa_history_v10', JSON.stringify(history));
+        localStorage.setItem('santa_history_v12', JSON.stringify(history));
       }
     }
 
@@ -357,7 +377,7 @@
       list.innerHTML = '';
 
       if (setupParticipants.length === 0) {
-        list.innerHTML = `<div class="text-center py-4 text-xs text-emerald-600/70">Brak osób na liście. Wpisz imię powyżej.</div>`;
+        list.innerHTML = `<div class="text-center py-4 text-xs text-emerald-600/70">Brak osób na liście. Wpisz swoje imię powyżej.</div>`;
         return;
       }
 
@@ -367,7 +387,6 @@
         item.innerHTML = `
           <div>
             <span class="text-white font-bold">${p.name}</span>
-            ${p.wish ? `<span class="text-amber-300/80 block text-[10px]">💡 ${p.wish}</span>` : ''}
           </div>
           <button onclick="removeParticipant(${i})" class="text-slate-500 hover:text-red-400 p-1 transition-colors text-xs">✕</button>
         `;
@@ -419,6 +438,7 @@
       document.getElementById('drawView').classList.add('hidden');
       document.getElementById('historyView').classList.add('hidden');
       document.getElementById('confirmView').classList.add('hidden');
+      document.getElementById('countdownView').classList.add('hidden');
       document.getElementById('giftView').classList.add('hidden');
       document.getElementById('resultView').classList.add('hidden');
     }
@@ -433,7 +453,14 @@
       document.getElementById('drawView').classList.remove('hidden');
 
       document.getElementById('currentDrawTitle').textContent = state.title;
-      document.getElementById('progressStatus').textContent = `Wylosowano ${state.drawn.length} z ${state.names.length} osób`;
+
+      // Aktualizacja paska postępu na żywo
+      const drawnCount = state.drawn.length;
+      const totalCount = state.names.length;
+      const pct = totalCount > 0 ? (drawnCount / totalCount) * 100 : 0;
+      
+      document.getElementById('progressText').textContent = `${drawnCount} z ${totalCount}`;
+      document.getElementById('progressBar').style.width = `${pct}%`;
 
       const listContainer = document.getElementById('buttonsList');
       listContainer.innerHTML = '';
@@ -449,10 +476,11 @@
         
         btn.innerHTML = `
           <span class="text-sm font-bold">${name}</span>
-          <span class="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 ${
+          <span class="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 ${
             isDrawn ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20'
           }">
-            ${isDrawn ? '🔒 Przypomnij (PIN)' : 'Otwórz Prezent'}
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            ${isDrawn ? 'Przypomnij' : 'Otwórz Prezent'}
           </span>
         `;
 
@@ -481,7 +509,8 @@
             <h4 class="font-bold text-sm text-white">${h.title}</h4>
             <p class="text-xs text-emerald-400/80 mt-0.5">${h.names.length} osób | Budżet: ${h.budget || 'Brak'}</p>
           </div>
-          <button onclick="loadFromHistory(${h.id})" class="bg-emerald-900 hover:bg-emerald-800 text-amber-300 px-3 py-2 rounded-xl text-xs font-semibold border border-emerald-700/60">
+          <button onclick="loadFromHistory(${h.id})" class="bg-emerald-900 hover:bg-emerald-800 text-amber-300 px-3.5 py-2 rounded-xl text-xs font-semibold border border-emerald-700/60 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
             Otwórz
           </button>
         `;
@@ -493,7 +522,7 @@
       const found = history.find(h => h.id === id);
       if (found) {
         state = { ...found };
-        localStorage.setItem('santa_m3_v10', JSON.stringify(state));
+        localStorage.setItem('santa_final_v12', JSON.stringify(state));
         switchToTab('draw');
       }
     }
@@ -550,11 +579,31 @@
           alert('Niepoprawny PIN!');
           return;
         }
-        showResultScreen();
+        startCountdown();
       } else {
         state.pins[currentGiver] = pin;
-        showGiftScreen();
+        startCountdown();
       }
+    }
+
+    // ANIMACJA ODLIECZENIA 3... 2... 1...
+    function startCountdown() {
+      hideAllViews();
+      document.getElementById('countdownView').classList.remove('hidden');
+      
+      const numElem = document.getElementById('countdownNumber');
+      let count = 3;
+      numElem.textContent = count;
+
+      const timer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          numElem.textContent = count;
+        } else {
+          clearInterval(timer);
+          showGiftScreen();
+        }
+      }, 850);
     }
 
     function showGiftScreen() {
@@ -623,7 +672,7 @@
     function confirmReset() {
       const code = prompt('Aby utworzyć nowe losowanie, wpisz "RESET":');
       if (code && code.toUpperCase() === 'RESET') {
-        localStorage.removeItem('santa_m3_v10');
+        localStorage.removeItem('santa_final_v12');
         state = { id: null, title: '', budget: '', names: [], pairs: {}, pins: {}, wishlists: {}, drawn: [] };
         setupParticipants = [];
         renderSetupList();
