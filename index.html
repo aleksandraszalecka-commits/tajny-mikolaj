@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Tajny Mikołaj">
   <title>Tajny Mikołaj 🎄</title>
+
+  <!-- IKONA APLIKACJI NA EKRAN GŁÓWNY (PREZENT) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='120' fill='%23800f1c'/><rect x='224' y='180' width='64' height='268' fill='%23fbbf24'/><rect x='64' y='240' width='384' height='208' rx='24' fill='%23991b1b'/><rect x='224' y='240' width='64' height='208' fill='%23fbbf24'/><rect x='48' y='180' width='416' height='72' rx='16' fill='%23b91c1c'/><rect x='224' y='180' width='64' height='72' fill='%23f59e0b'/><path d='M256 180c-40-60-120-60-120 0s80 60 120 0z' fill='%23f59e0b'/><path d='M256 180c40-60 120-60 120 0s-80 60-120 0z' fill='%23f59e0b'/><circle cx='256' cy='180' r='24' fill='%23fbbf24'/></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='120' fill='%23800f1c'/><rect x='224' y='180' width='64' height='268' fill='%23fbbf24'/><rect x='64' y='240' width='384' height='208' rx='24' fill='%23991b1b'/><rect x='224' y='240' width='64' height='208' fill='%23fbbf24'/><rect x='48' y='180' width='416' height='72' rx='16' fill='%23b91c1c'/><rect x='224' y='180' width='64' height='72' fill='%23f59e0b'/><path d='M256 180c-40-60-120-60-120 0s80 60 120 0z' fill='%23f59e0b'/><path d='M256 180c40-60 120-60 120 0s-80 60-120 0z' fill='%23f59e0b'/><circle cx='256' cy='180' r='24' fill='%23fbbf24'/></svg>">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -79,7 +85,6 @@
     <!-- EKRAN 1: DODAWANIE UCZESTNIKÓW -->
     <div id="setupView">
       <div class="text-center mb-6">
-        <!-- NATYWNE, ŚWIETNIE WYGLĄDAJĄCE EMOJI MIKOŁAJA W CZERWONYM KAFELKU -->
         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-700 to-red-900 border border-red-500/40 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-red-950/60 text-3xl">
           🎅
         </div>
@@ -113,7 +118,6 @@
           <div id="participantsList" class="space-y-2 max-h-[140px] overflow-y-auto pr-1 min-h-[60px]"></div>
         </div>
 
-        <!-- PRZYCISK LOSOWANIA Z CZYSZCZONYM EMOJI KOSTKI -->
         <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-700 to-red-800 hover:from-red-600 hover:to-red-700 text-white font-extrabold py-4 rounded-2xl shadow-lg shadow-red-950/60 transition-all active:scale-95 text-sm flex items-center justify-center gap-2.5 border border-red-500/30">
           <span class="text-lg">🎲</span>
           Rozpocznij Losowanie
@@ -260,7 +264,7 @@
 
   </main>
 
-  <!-- NAVBAR Z CZYSZCZONYM EMOJI PREZENTU -->
+  <!-- NAVBAR -->
   <nav class="w-full max-w-md mt-4 mb-2 bg-emerald-950/80 backdrop-blur-xl rounded-2xl border border-emerald-800/60 p-1.5 flex gap-2 z-20">
     <button id="navDrawBtn" onclick="switchToTab('draw')" class="flex-1 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-red-700 text-white shadow-md">
       <span class="text-base">🎁</span>
@@ -322,8 +326,8 @@
     });
 
     window.onload = () => {
-      const savedState = localStorage.getItem('santa_emoji_v50');
-      const savedHistory = localStorage.getItem('santa_history_v50');
+      const savedState = localStorage.getItem('santa_icon_v60');
+      const savedHistory = localStorage.getItem('santa_history_v60');
 
       if (savedHistory) history = JSON.parse(savedHistory);
       if (savedState) {
@@ -335,12 +339,12 @@
     };
 
     function saveState() {
-      localStorage.setItem('santa_emoji_v50', JSON.stringify(state));
+      localStorage.setItem('santa_icon_v60', JSON.stringify(state));
       if (state.id) {
         const idx = history.findIndex(h => h.id === state.id);
         if (idx !== -1) history[idx] = { ...state };
         else history.unshift({ ...state });
-        localStorage.setItem('santa_history_v50', JSON.stringify(history));
+        localStorage.setItem('santa_history_v60', JSON.stringify(history));
       }
     }
 
@@ -519,7 +523,7 @@
       const found = history.find(h => h.id === id);
       if (found) {
         state = { ...found };
-        localStorage.setItem('santa_emoji_v50', JSON.stringify(state));
+        localStorage.setItem('santa_icon_v60', JSON.stringify(state));
         switchToTab('draw');
       }
     }
@@ -668,7 +672,7 @@
     function confirmReset() {
       const code = prompt('Aby utworzyć nowe losowanie, wpisz "RESET":');
       if (code && code.toUpperCase() === 'RESET') {
-        localStorage.removeItem('santa_emoji_v50');
+        localStorage.removeItem('santa_icon_v60');
         state = { id: null, title: '', budget: '', names: [], pairs: {}, pins: {}, wishlists: {}, drawn: [] };
         setupParticipants = [];
         renderSetupList();
