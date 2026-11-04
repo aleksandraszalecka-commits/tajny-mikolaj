@@ -79,11 +79,9 @@
     <!-- EKRAN 1: DODAWANIE UCZESTNIKÓW -->
     <div id="setupView">
       <div class="text-center mb-6">
-        <!-- ZASTĄPIENIE CHOINKI DOPRACOWANYM PREZENTEM W CZERWONYM KAFELKU -->
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-700 to-red-900 border border-red-500/40 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-red-950/60">
-          <svg class="w-9 h-9 text-amber-300" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M20 6h-3.12B3.984 3.984 0 0 0 17 4.5C17 3.12 15.88 2 14.5 2c-1.19 0-2.18.83-2.43 1.95A4.004 4.004 0 0 0 9.5 2C8.12 2 7 3.12 7 4.5C7 5.06 7.19 5.57 7.5 6H4c-1.11 0-2 .89-2 2v3c0 .55.45 1 1 1h1v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h1c.55 0 1-.45 1-1V8c0-1.11-.89-2-2-2zm-5.5-2c.83 0 1.5.67 1.5 1.5S15.33 7 14.5 7S13 6.33 13 5.5S13.67 4 14.5 4zM9.5 4c.83 0 1.5.67 1.5 1.5S10.33 7 9.5 7S8 6.33 8 5.5S8.67 4 9.5 4zM11 20H6V12h5v8zm0-10H4V8h7v2zm7 10h-5V12h5v8zm2-10h-7V8h7v2z"/>
-          </svg>
+        <!-- NATYWNE, ŚWIETNIE WYGLĄDAJĄCE EMOJI MIKOŁAJA W CZERWONYM KAFELKU -->
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-700 to-red-900 border border-red-500/40 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-red-950/60 text-3xl">
+          🎅
         </div>
         <h1 class="text-2xl font-black tracking-tight text-white">Tajny Mikołaj</h1>
         <p class="text-emerald-400/80 text-xs mt-1 font-semibold">Wpisz swoje imię oraz pomysł na prezent</p>
@@ -101,7 +99,7 @@
           <input type="text" id="wishInput" placeholder="Co chciałbyś dostać? (opcjonalnie)" class="w-full bg-emerald-950/80 border border-emerald-800/80 rounded-xl px-4 py-2.5 text-amber-300/90 text-xs focus:outline-none focus:border-amber-400">
           
           <button onclick="addParticipant()" class="w-full bg-emerald-900/80 hover:bg-emerald-800 active:scale-98 text-emerald-100 font-bold py-3 rounded-xl transition-all text-xs border border-emerald-700/60 flex items-center justify-center gap-2 shadow-sm">
-            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+            <span class="text-sm">➕</span>
             Dodaj do listy
           </button>
         </div>
@@ -115,11 +113,9 @@
           <div id="participantsList" class="space-y-2 max-h-[140px] overflow-y-auto pr-1 min-h-[60px]"></div>
         </div>
 
-        <!-- PRZYCISK Z KOSTKĄ DO LOSOWANIA -->
+        <!-- PRZYCISK LOSOWANIA Z CZYSZCZONYM EMOJI KOSTKI -->
         <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-700 to-red-800 hover:from-red-600 hover:to-red-700 text-white font-extrabold py-4 rounded-2xl shadow-lg shadow-red-950/60 transition-all active:scale-95 text-sm flex items-center justify-center gap-2.5 border border-red-500/30">
-          <svg class="w-5 h-5 text-amber-300" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7 9c-.83 0-1.5-.67-1.5-1.5S6.17 6 7 6s1.5.67 1.5 1.5S7.83 9 7 9zm5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
-          </svg>
+          <span class="text-lg">🎲</span>
           Rozpocznij Losowanie
         </button>
       </div>
@@ -128,8 +124,8 @@
     <!-- EKRAN 2: LISTA OSOB + PASEK POSTĘPU -->
     <div id="drawView" class="hidden">
       <div class="text-center mb-4">
-        <div class="w-12 h-12 bg-red-950/60 border border-red-700/40 rounded-2xl flex items-center justify-center mx-auto mb-2">
-          <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <div class="w-12 h-12 bg-red-950/60 border border-red-700/40 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl">
+          🎁
         </div>
         <h2 id="currentDrawTitle" class="text-xl font-extrabold text-white">Podaj telefon dalej</h2>
         <p class="text-emerald-400/80 text-xs mt-0.5">Kliknij swoje imię z listy poniżej</p>
@@ -149,7 +145,7 @@
 
       <div class="mt-6 pt-4 border-t border-emerald-950/80 flex justify-between items-center">
         <button onclick="archiveCurrentDraw()" class="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1.5 font-semibold">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+          <span>📁</span>
           Zapisz w Historii
         </button>
         <button onclick="confirmReset()" class="text-xs text-slate-500 hover:text-red-400 underline">
@@ -161,8 +157,8 @@
     <!-- EKRAN 3: HISTORIA -->
     <div id="historyView" class="hidden">
       <div class="text-center mb-6">
-        <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
-          <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl">
+          📜
         </div>
         <h2 class="text-xl font-extrabold text-white">Historia Losowań</h2>
         <p class="text-slate-400 text-xs mt-1">Poprzednie zapisane edycje</p>
@@ -173,8 +169,8 @@
 
     <!-- EKRAN 4: PIN -->
     <div id="confirmView" class="hidden text-center py-3">
-      <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
-        <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl">
+        🔒
       </div>
       <h3 class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Potwierdzenie Tożsamości</h3>
       <p id="confirmName" class="text-2xl font-black text-amber-300 my-1 tracking-wide"></p>
@@ -186,7 +182,7 @@
       
       <div class="space-y-2">
         <button onclick="handlePinSubmit()" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-extrabold py-3.5 rounded-xl transition-all active:scale-95 text-sm shadow-lg shadow-emerald-950/50 flex items-center justify-center gap-2">
-          <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+          <span>🔑</span>
           Zatwierdź PIN
         </button>
         <button onclick="showDrawView()" class="w-full bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold py-2.5 rounded-xl text-xs border border-slate-800">
@@ -236,8 +232,8 @@
 
     <!-- EKRAN 6: WYNIK -->
     <div id="resultView" class="hidden text-center py-2">
-      <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
-        <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+      <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-2 text-xl">
+        🎉
       </div>
       <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Kupujesz prezent dla:</p>
       
@@ -247,8 +243,7 @@
         
         <div id="recipientWishlist" class="hidden mt-4 pt-3 border-t border-red-900/60 text-xs text-left">
           <span class="font-bold text-red-200/70 uppercase tracking-wider flex items-center gap-1.5 mb-1 text-[10px]">
-            <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-            Sugestia Prezentowa:
+            <span>💡</span> Sugestia Prezentowa:
           </span>
           <span id="wishlistText" class="text-slate-100 font-medium italic bg-black/30 p-2.5 rounded-xl block border border-red-900/40"></span>
         </div>
@@ -259,25 +254,20 @@
       </p>
 
       <button onclick="hideResult()" class="w-full bg-gradient-to-r from-red-700 to-red-800 hover:from-red-600 hover:to-red-700 text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-red-950/60 transition-all active:scale-95 text-sm border border-red-500/30 flex items-center justify-center gap-2">
-        <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-        Zamknij i podaj telefon dalej
+        <span>🔒</span> Zamknij i podaj telefon dalej
       </button>
     </div>
 
   </main>
 
-  <!-- NAVBAR Z CZYSZCZONYM PREZENTEM W PRZYCISKU -->
+  <!-- NAVBAR Z CZYSZCZONYM EMOJI PREZENTU -->
   <nav class="w-full max-w-md mt-4 mb-2 bg-emerald-950/80 backdrop-blur-xl rounded-2xl border border-emerald-800/60 p-1.5 flex gap-2 z-20">
     <button id="navDrawBtn" onclick="switchToTab('draw')" class="flex-1 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-red-700 text-white shadow-md">
-      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M20 6h-3.12B3.984 3.984 0 0 0 17 4.5C17 3.12 15.88 2 14.5 2c-1.19 0-2.18.83-2.43 1.95A4.004 4.004 0 0 0 9.5 2C8.12 2 7 3.12 7 4.5C7 5.06 7.19 5.57 7.5 6H4c-1.11 0-2 .89-2 2v3c0 .55.45 1 1 1h1v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h1c.55 0 1-.45 1-1V8c0-1.11-.89-2-2-2zm-5.5-2c.83 0 1.5.67 1.5 1.5S15.33 7 14.5 7S13 6.33 13 5.5S13.67 4 14.5 4zM9.5 4c.83 0 1.5.67 1.5 1.5S10.33 7 9.5 7S8 6.33 8 5.5S8.67 4 9.5 4zM11 20H6V12h5v8zm0-10H4V8h7v2zm7 10h-5V12h5v8zm2-10h-7V8h7v2z"/>
-      </svg>
+      <span class="text-base">🎁</span>
       Losowanie
     </button>
     <button id="navHistoryBtn" onclick="switchToTab('history')" class="flex-1 py-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all text-emerald-300 hover:text-white">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
+      <span class="text-base">📜</span>
       Historia
     </button>
   </nav>
@@ -332,9 +322,8 @@
     });
 
     window.onload = () => {
-      // KLUCZ V40 ABY OMIJAĆ PAMIĘĆ PO PODMIANIE IKON
-      const savedState = localStorage.getItem('santa_ios_v40');
-      const savedHistory = localStorage.getItem('santa_history_v40');
+      const savedState = localStorage.getItem('santa_emoji_v50');
+      const savedHistory = localStorage.getItem('santa_history_v50');
 
       if (savedHistory) history = JSON.parse(savedHistory);
       if (savedState) {
@@ -346,12 +335,12 @@
     };
 
     function saveState() {
-      localStorage.setItem('santa_ios_v40', JSON.stringify(state));
+      localStorage.setItem('santa_emoji_v50', JSON.stringify(state));
       if (state.id) {
         const idx = history.findIndex(h => h.id === state.id);
         if (idx !== -1) history[idx] = { ...state };
         else history.unshift({ ...state });
-        localStorage.setItem('santa_history_v40', JSON.stringify(history));
+        localStorage.setItem('santa_history_v50', JSON.stringify(history));
       }
     }
 
@@ -487,7 +476,7 @@
           <span class="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 ${
             isDrawn ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20'
           }">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <span>🔒</span>
             ${isDrawn ? 'Przypomnij' : 'Otwórz Prezent'}
           </span>
         `;
@@ -518,7 +507,7 @@
             <p class="text-xs text-emerald-400/80 mt-0.5">${h.names.length} osób | Budżet: ${h.budget || 'Brak'}</p>
           </div>
           <button onclick="loadFromHistory(${h.id})" class="bg-emerald-900 hover:bg-emerald-800 text-amber-300 px-3.5 py-2 rounded-xl text-xs font-semibold border border-emerald-700/60 flex items-center gap-1">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            <span>👁️</span>
             Otwórz
           </button>
         `;
@@ -530,7 +519,7 @@
       const found = history.find(h => h.id === id);
       if (found) {
         state = { ...found };
-        localStorage.setItem('santa_ios_v40', JSON.stringify(state));
+        localStorage.setItem('santa_emoji_v50', JSON.stringify(state));
         switchToTab('draw');
       }
     }
@@ -679,7 +668,7 @@
     function confirmReset() {
       const code = prompt('Aby utworzyć nowe losowanie, wpisz "RESET":');
       if (code && code.toUpperCase() === 'RESET') {
-        localStorage.removeItem('santa_ios_v40');
+        localStorage.removeItem('santa_emoji_v50');
         state = { id: null, title: '', budget: '', names: [], pairs: {}, pins: {}, wishlists: {}, drawn: [] };
         setupParticipants = [];
         renderSetupList();
