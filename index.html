@@ -2,14 +2,18 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Secret Santa 🎄</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: #05120c;
       background-image: 
         radial-gradient(circle at 50% -10%, rgba(153, 27, 27, 0.45) 0%, transparent 60%),
@@ -30,16 +34,16 @@
       to { transform: translateY(105vh) rotate(360deg); }
     }
 
-    .m3-card {
+    .ios-card {
       background: rgba(18, 30, 23, 0.88);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(153, 27, 27, 0.2);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(153, 27, 27, 0.2);
     }
 
     .burgundy-card {
-      background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
+      background: linear-gradient(135deg, #800f1c 0%, #450a0a 100%);
       border: 1px solid rgba(248, 113, 113, 0.25);
     }
 
@@ -58,28 +62,26 @@
     .glow-effect { opacity: 0; transition: opacity 0.5s ease 0.2s; }
     .gift-container.open .glow-effect { opacity: 1; }
 
-    /* Animacja odliczania */
     @keyframes pulseScale {
       0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.25); opacity: 0.8; }
+      50% { transform: scale(1.2); opacity: 0.8; }
     }
-    .countdown-anim {
-      animation: pulseScale 0.8s ease-in-out infinite;
-    }
+    .countdown-anim { animation: pulseScale 0.8s ease-in-out infinite; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between p-4 text-slate-100 max-w-md mx-auto relative">
+<body class="min-h-screen flex flex-col justify-between p-4 pt-8 text-slate-100 max-w-md mx-auto relative select-none">
 
   <div id="snowContainer"></div>
 
   <!-- KARTA GŁÓWNA -->
-  <main class="w-full m3-card rounded-[32px] p-6 z-10 my-auto relative overflow-hidden">
+  <main class="w-full ios-card rounded-[32px] p-6 z-10 my-auto relative overflow-hidden">
     
     <!-- EKRAN 1: DODAWANIE UCZESTNIKÓW -->
     <div id="setupView">
       <div class="text-center mb-6">
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-red-900 to-emerald-900 border border-red-500/30 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-red-950/60">
-          <svg class="w-7 h-7 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- POPRAWIONA ŚWIĄTECZNA IKONA (CZAPKA / PREZENT) -->
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-red-900 to-emerald-950 border border-red-500/30 flex items-center justify-center mx-auto mb-3 shadow-xl shadow-red-950/50">
+          <svg class="w-9 h-9 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V6a2 2 0 10-2 2h2zm0 13C10.832 21 2 13.67 2 9.5 2 7.015 4.015 5 6.5 5c1.624 0 3.064.86 3.87 2.16C11.18 5.86 12.62 5 14.25 5 16.735 5 18.75 7.015 18.75 9.5c0 4.17-8.832 11.5-9.75 11.5z"/>
           </svg>
         </div>
@@ -98,7 +100,7 @@
           <input type="text" id="nameInput" placeholder="Twoje imię" class="w-full bg-emerald-950/80 border border-emerald-800/80 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-red-500">
           <input type="text" id="wishInput" placeholder="Co chciałbyś dostać? (opcjonalnie)" class="w-full bg-emerald-950/80 border border-emerald-800/80 rounded-xl px-4 py-2.5 text-amber-300/90 text-xs focus:outline-none focus:border-amber-400">
           
-          <button onclick="addParticipant()" class="w-full bg-emerald-900/80 hover:bg-emerald-800 active:scale-98 text-emerald-100 font-bold py-2.5 rounded-xl transition-all text-xs border border-emerald-700/60 flex items-center justify-center gap-2">
+          <button onclick="addParticipant()" class="w-full bg-emerald-900/80 hover:bg-emerald-800 active:scale-98 text-emerald-100 font-bold py-3 rounded-xl transition-all text-xs border border-emerald-700/60 flex items-center justify-center gap-2 shadow-sm">
             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
             Dodaj do listy
           </button>
@@ -113,14 +115,20 @@
           <div id="participantsList" class="space-y-2 max-h-[140px] overflow-y-auto pr-1 min-h-[60px]"></div>
         </div>
 
-        <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-700 to-red-800 hover:from-red-600 hover:to-red-700 text-white font-extrabold py-4 rounded-2xl shadow-lg shadow-red-950/60 transition-all active:scale-95 text-sm flex items-center justify-center gap-2 mt-2 border border-red-500/30">
-          <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L5.605 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+        <!-- POPRAWIONA IKONA KOSTKI NA PRZYCISKU LOSOWANIA -->
+        <button onclick="startDraw()" class="w-full bg-gradient-to-r from-red-700 to-red-800 hover:from-red-600 hover:to-red-700 text-white font-extrabold py-4 rounded-2xl shadow-lg shadow-red-950/60 transition-all active:scale-95 text-sm flex items-center justify-center gap-2.5 border border-red-500/30">
+          <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="4" stroke-width="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+            <circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/>
+            <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+          </svg>
           Rozpocznij Losowanie
         </button>
       </div>
     </div>
 
-    <!-- EKRAN 2: LISTA OSOB + PASEK POSTĘPU NA ŻYWO -->
+    <!-- EKRAN 2: LISTA OSOB + PASEK POSTĘPU -->
     <div id="drawView" class="hidden">
       <div class="text-center mb-4">
         <div class="w-12 h-12 bg-red-950/60 border border-red-700/40 rounded-2xl flex items-center justify-center mx-auto mb-2">
@@ -130,7 +138,6 @@
         <p class="text-emerald-400/80 text-xs mt-0.5">Kliknij swoje imię z listy poniżej</p>
       </div>
 
-      <!-- PASEK POSTĘPU NA ŻYWO -->
       <div class="mb-5 bg-emerald-950/60 p-3 rounded-2xl border border-emerald-800/60">
         <div class="flex justify-between text-xs font-bold mb-1.5">
           <span class="text-slate-300">Postęp losowania:</span>
@@ -191,7 +198,7 @@
       </div>
     </div>
 
-    <!-- EKRAN ODLIECZENIA 3... 2... 1... (REVEAL EFFECT) -->
+    <!-- EKRAN ODLICZANIA 3... 2... 1... -->
     <div id="countdownView" class="hidden text-center py-12">
       <p class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-4">Zasłoń ekran przed innymi!</p>
       <div id="countdownNumber" class="text-7xl font-black text-amber-400 countdown-anim my-4">3</div>
@@ -241,7 +248,6 @@
         <div id="recipientName" class="text-3xl font-black text-amber-300 tracking-wide"></div>
         <div id="budgetCapsule" class="inline-block mt-2 px-3.5 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-xs text-amber-200 font-bold"></div>
         
-        <!-- Sugestia Prezentowa -->
         <div id="recipientWishlist" class="hidden mt-4 pt-3 border-t border-red-900/60 text-xs text-left">
           <span class="font-bold text-red-200/70 uppercase tracking-wider flex items-center gap-1.5 mb-1 text-[10px]">
             <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
@@ -263,13 +269,18 @@
 
   </main>
 
-  <nav class="w-full max-w-md mt-4 bg-emerald-950/80 backdrop-blur-xl rounded-2xl border border-emerald-800/60 p-1.5 flex gap-2 z-20">
+  <!-- POPRAWIONY NAVBAR Z PRAWIDŁOWYMI IKONAMI (PREZENT I ZEGAR) -->
+  <nav class="w-full max-w-md mt-4 mb-2 bg-emerald-950/80 backdrop-blur-xl rounded-2xl border border-emerald-800/60 p-1.5 flex gap-2 z-20">
     <button id="navDrawBtn" onclick="switchToTab('draw')" class="flex-1 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-red-700 text-white shadow-md">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6m16 0V8a2 2 0 00-2-2h-3.93a2 2 0 01-1.66-.9l-.82-1.2a2 2 0 00-1.66-.9H9.41a2 2 0 00-1.66.9l-.82 1.2A2 2 0 015.27 6H4a2 2 0 00-2 2v4m16 0H4m8 3v4"/>
+      </svg>
       Losowanie
     </button>
     <button id="navHistoryBtn" onclick="switchToTab('history')" class="flex-1 py-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all text-emerald-300 hover:text-white">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
       Historia
     </button>
   </nav>
@@ -324,8 +335,8 @@
     });
 
     window.onload = () => {
-      const savedState = localStorage.getItem('santa_final_v12');
-      const savedHistory = localStorage.getItem('santa_history_v12');
+      const savedState = localStorage.getItem('santa_ios_v14');
+      const savedHistory = localStorage.getItem('santa_history_v14');
 
       if (savedHistory) history = JSON.parse(savedHistory);
       if (savedState) {
@@ -337,12 +348,12 @@
     };
 
     function saveState() {
-      localStorage.setItem('santa_final_v12', JSON.stringify(state));
+      localStorage.setItem('santa_ios_v14', JSON.stringify(state));
       if (state.id) {
         const idx = history.findIndex(h => h.id === state.id);
         if (idx !== -1) history[idx] = { ...state };
         else history.unshift({ ...state });
-        localStorage.setItem('santa_history_v12', JSON.stringify(history));
+        localStorage.setItem('santa_history_v14', JSON.stringify(history));
       }
     }
 
@@ -454,7 +465,6 @@
 
       document.getElementById('currentDrawTitle').textContent = state.title;
 
-      // Aktualizacja paska postępu na żywo
       const drawnCount = state.drawn.length;
       const totalCount = state.names.length;
       const pct = totalCount > 0 ? (drawnCount / totalCount) * 100 : 0;
@@ -522,7 +532,7 @@
       const found = history.find(h => h.id === id);
       if (found) {
         state = { ...found };
-        localStorage.setItem('santa_final_v12', JSON.stringify(state));
+        localStorage.setItem('santa_ios_v14', JSON.stringify(state));
         switchToTab('draw');
       }
     }
@@ -586,7 +596,6 @@
       }
     }
 
-    // ANIMACJA ODLIECZENIA 3... 2... 1...
     function startCountdown() {
       hideAllViews();
       document.getElementById('countdownView').classList.remove('hidden');
@@ -672,7 +681,7 @@
     function confirmReset() {
       const code = prompt('Aby utworzyć nowe losowanie, wpisz "RESET":');
       if (code && code.toUpperCase() === 'RESET') {
-        localStorage.removeItem('santa_final_v12');
+        localStorage.removeItem('santa_ios_v14');
         state = { id: null, title: '', budget: '', names: [], pairs: {}, pins: {}, wishlists: {}, drawn: [] };
         setupParticipants = [];
         renderSetupList();
