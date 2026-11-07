@@ -404,13 +404,29 @@
       const names = setupParticipants.map(p => p.name);
       let receivers = [...names];
       let valid = false;
+      let attempts = 0;
 
       while (!valid) {
+        attempts++;
+        if (attempts > 1000) {
+          alert('Nie udało się utworzyć losowania z uwzględnieniem podanych reguł. Spróbuj dodać więcej osób!');
+          return;
+        }
+
         for (let i = receivers.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [receivers[i], receivers[j]] = [receivers[j], receivers[i]];
         }
-        valid = names.every((giver, index) => giver !== receivers[index]);
+
+        // Warunek 1: Nikt nie losuje samego siebie
+        const noSelfDraw = names.every((giver, index) => giver !== receivers[index]);
+
+        // Warunek 2: Julia NIE MOŻE wylosować Oli
+        const customRulePassed = !names.some((giver, index) => {
+          return giver.toLowerCase() === 'julia' && receivers[index].toLowerCase() === 'ola';
+        });
+
+        valid = noSelfDraw && customRulePassed;
       }
 
       state.id = Date.now();
